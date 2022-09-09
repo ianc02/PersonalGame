@@ -20,8 +20,8 @@ public class TerrainGeneration : MonoBehaviour
 
     private void Update()
     {
-        Terrain terrain = GetComponent<Terrain>();
-        terrain.terrainData = GenerateTerrain(terrain.terrainData);
+        //Terrain terrain = GetComponent<Terrain>();
+        //terrain.terrainData = GenerateTerrain(terrain.terrainData);
     }
 
     TerrainData GenerateTerrain(TerrainData terrainData)
