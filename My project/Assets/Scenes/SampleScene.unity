@@ -194,7 +194,7 @@ Transform:
   m_Children:
   - {fileID: 2122637393}
   - {fileID: 330585546}
-  - {fileID: 858630178}
+  - {fileID: 831659101}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -558,39 +558,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &796828197 stripped
+--- !u!1 &831659100 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: -5599741065560425103, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
     type: 3}
-  m_PrefabInstance: {fileID: 1004138904}
+  m_PrefabInstance: {fileID: 2121274255}
   m_PrefabAsset: {fileID: 0}
---- !u!111 &796828200
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796828197}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: -203655887218126122, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
+--- !u!4 &831659101 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
     type: 3}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
---- !u!95 &796828201
+  m_PrefabInstance: {fileID: 2121274255}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &831659102
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796828197}
+  m_GameObject: {fileID: 831659100}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 773e22f835170d84b90bb751b5358cc0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -600,36 +590,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1 &858630177 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1004138904}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &858630178 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
-    type: 3}
-  m_PrefabInstance: {fileID: 1004138904}
-  m_PrefabAsset: {fileID: 0}
---- !u!111 &858630179
-Animation:
+--- !u!114 &831659103
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 858630177}
+  m_GameObject: {fileID: 831659100}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: -203655887218126122, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
-    type: 3}
-  m_Animations:
-  - {fileID: -203655887218126122, guid: b6aac88fbd6a2bf498a9c8c456a26f1d, type: 3}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
---- !u!1001 &1004138904
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef993d4e13a1ff14fb30756526f9735b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &2121274255
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -640,6 +613,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b6aac88fbd6a2bf498a9c8c456a26f1d,
         type: 3}
@@ -725,7 +713,7 @@ Transform:
   m_GameObject: {fileID: 2122637392}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 306401353}
