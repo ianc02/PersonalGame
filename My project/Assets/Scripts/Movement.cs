@@ -29,8 +29,14 @@ public class Movement : MonoBehaviour
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        
     }
 
+    IEnumerator waiter()
+    {
+        yield return new WaitForSeconds(0.5f);
+        moveDirection.y = jumpSpeed;
+    }
     void Update()
     {
         // We are grounded, so recalculate move direction based on axes
@@ -45,7 +51,15 @@ public class Movement : MonoBehaviour
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
-            moveDirection.y = jumpSpeed;
+            if (!Input.GetKey("w"))
+            {
+                StartCoroutine(waiter());
+            }
+            else
+            {
+                moveDirection.y = jumpSpeed;
+                //ADD SO THAT WHEN LAND RESET JUMP ANIMATION BOOL
+            }
         }
         else
         {

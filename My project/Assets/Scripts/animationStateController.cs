@@ -19,6 +19,7 @@ public class animationStateController : MonoBehaviour
         bool isRunning = animator.GetBool("IsRunning");
         bool forwardPressed = Input.GetKey("w");
         bool shiftPressed = Input.GetKey("left shift");
+        bool spacePressed = Input.GetKey("space");
         
 
 
@@ -45,6 +46,14 @@ public class animationStateController : MonoBehaviour
         {
             animator.SetBool("IsWalking", false);
             animator.SetBool("IsRunning", false);
+        }
+        if (spacePressed)
+        {
+            animator.SetBool("IsJumping",true);
+        }
+        else
+        {
+            animator.SetBool("IsJumping", false);
         }
     }
 }
