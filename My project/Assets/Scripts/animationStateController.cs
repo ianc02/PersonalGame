@@ -17,9 +17,11 @@ public class animationStateController : MonoBehaviour
     {
         bool isWalking = animator.GetBool("IsWalking");
         bool isRunning = animator.GetBool("IsRunning");
+        
         bool forwardPressed = Input.GetKey("w");
         bool shiftPressed = Input.GetKey("left shift");
         bool spacePressed = Input.GetKey("space");
+        float mouseRotation = Input.GetAxis("Mouse Y");
         
 
 
@@ -46,6 +48,20 @@ public class animationStateController : MonoBehaviour
         {
             animator.SetBool("IsWalking", false);
             animator.SetBool("IsRunning", false);
+            if (mouseRotation >= 0.05)
+            {
+                animator.SetBool("Rightturn", true);
+            }
+            if (mouseRotation <= -0.05)
+            {
+                animator.SetBool("Leftturn", true);
+            }
+            if (0.05 > mouseRotation && mouseRotation > -0.05)
+            {
+                animator.SetBool("Rightturn", false);
+                animator.SetBool("Leftturn", false);
+            }
+            // Debug.Log(mouseRotation);
         }
         if (spacePressed)
         {
@@ -55,5 +71,10 @@ public class animationStateController : MonoBehaviour
         {
             animator.SetBool("IsJumping", false);
         }
+
+        
+
+
+
     }
 }

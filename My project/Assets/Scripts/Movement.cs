@@ -14,6 +14,11 @@ public class Movement : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
+    public float xMin;
+    public float xMax;
+    public float zMin;
+    public float zMax;
+
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -76,6 +81,8 @@ public class Movement : MonoBehaviour
 
         // Move the controller
         characterController.Move(moveDirection * Time.deltaTime);
+        
+        
 
         // Player and Camera rotation
         if (canMove)
