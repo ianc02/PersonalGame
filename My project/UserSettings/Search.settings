@@ -7,6 +7,9 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
+	"last_search.8788AF05" = "ref:\"Assets/EmaceArt/Slavic World Free/Material/Water.mat\""
+	"OpenInspectorPreview.8788AF05" = "0"
+	"currentGroup.8788AF05" = "scene"
 }
 providers = {
 	adb = {
@@ -51,6 +54,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"ref:\"Assets/EmaceArt/Slavic World Free/Material/Water.mat\""
 ]
 searchItemFavorites = [
 ]
