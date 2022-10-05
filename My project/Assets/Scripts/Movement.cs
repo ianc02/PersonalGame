@@ -7,13 +7,14 @@ using UnityEngine;
 //Obtained from https://sharpcoderblog.com/blog/unity-3d-fps-controller
 public class Movement : MonoBehaviour
 {
-    public float walkingSpeed = 7.5f;
-    public float runningSpeed = 11.5f;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
+    public GameObject body;
+    public float walkingSpeed;
+    public float runningSpeed;
+    public float jumpSpeed;
+    public float gravity;
     public Camera playerCamera;
-    public float lookSpeed = 2.0f;
-    public float lookXLimit = 45.0f;
+    public float lookSpeed;
+    public float lookXLimit;
     public float xMin;
     public float xMax;
     public float zMin;
@@ -87,10 +88,21 @@ public class Movement : MonoBehaviour
         // Player and Camera rotation
         if (canMove)
         {
+            
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+            if (!Input.GetKey("w"))
+            {
+                body.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+            
+
         }
+    }
+    public void setCanMove(bool b)
+    {
+        canMove = b;
     }
 }
