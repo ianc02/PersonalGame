@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; set; }
     // Start is called before the first frame update
     public Canvas inventory;
     public Canvas pauseMenu;
     public GameObject player;
+    private Collider pcollider;
+
 
     
     void Start()
     {
-        
+        pcollider = player.GetComponent<CapsuleCollider>();
     }
 
     // Update is called once per frame
@@ -45,6 +49,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        
+
     }
 
     public void pauseGame()
@@ -64,5 +70,27 @@ public class GameManager : MonoBehaviour
     public void removePauseMenu()
     {
         pauseMenu.gameObject.SetActive(false);
+    }
+
+
+    public void addToInventory(string objectTag, string objectname)
+    {
+
+        
+        foreach (Transform child in transform)
+        {
+            if (child.name == objectTag)
+            {
+                foreach(Transform grandchild in child.transform)
+                {
+                    if (grandchild.name == objectname)
+                    {
+                        int num = int.Parse(grandchild.GetComponentInChildren<TextMeshPro>().text);
+                        num += 1;
+                        grandchild.GetComponentInChildren<TextMeshPro>().SetText(num.ToString());
+                    }
+                }
+            }
+        }
     }
 }
