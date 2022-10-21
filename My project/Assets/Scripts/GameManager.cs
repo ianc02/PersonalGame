@@ -1,24 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
+using UnityEngine.Audio;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; set; }
+    public static GameManager Instance { get; private set; }
     // Start is called before the first frame update
     public Canvas inventory;
     public Canvas pauseMenu;
     public GameObject player;
+    public Camera cam;
+    public Terrain terrain;
+    public GameObject rockprefab;
     private Collider pcollider;
 
-
-    
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         pcollider = player.GetComponent<CapsuleCollider>();
+        RaycastHit hit;
+        
+        for (int i = 0; i < 10001; i++)
+        {
+            Vector3 pos = new Vector3(Random.Range(2, 1998), 700, Random.Range(2, 1998));
+            if (Physics.Raycast(pos, Vector3.down, out hit))
+            {
+                if (hit.transform.tag != "terrain")
+                {
+                    i -= 1;
+                }
+                else
+                {
+                    Instantiate(rockprefab, hit.point, Quaternion.identity);
+                } 
+            }
+                
+            
+        }
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -71,23 +106,36 @@ public class GameManager : MonoBehaviour
     {
         pauseMenu.gameObject.SetActive(false);
     }
-
+    public Camera getcamera()
+    {
+        return cam;
+    }
 
     public void addToInventory(string objectTag, string objectname)
     {
 
+        Debug.Log(objectTag);
+        Debug.Log(objectname);
         
-        foreach (Transform child in transform)
+        foreach (Transform child in inventory.transform)
         {
+            Debug.Log(0);
+            Debug.Log(child.name);
             if (child.name == objectTag)
             {
-                foreach(Transform grandchild in child.transform)
+                Debug.Log(1);
+                foreach(Transform grandchild in child)
                 {
                     if (grandchild.name == objectname)
                     {
-                        int num = int.Parse(grandchild.GetComponentInChildren<TextMeshPro>().text);
+                        Debug.Log(2);
+                        Debug.Log(grandchild.name);
+                        GameObject t = grandchild.gameObject;
+                        TextMeshProUGUI r = t.GetComponentInChildren<TextMeshProUGUI>();
+                        string e = r.text;
+                        int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
                         num += 1;
-                        grandchild.GetComponentInChildren<TextMeshPro>().SetText(num.ToString());
+                        grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                     }
                 }
             }

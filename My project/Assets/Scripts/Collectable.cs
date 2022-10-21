@@ -9,13 +9,14 @@ public class Collectable : MonoBehaviour
 
     private Collider collider;
     private TextMeshPro tmp;
-    public Camera cam;
-
+    private Camera cam;
     // Start is called before the first frame update
     void Start()
     {
         collider = GetComponent<SphereCollider>();
         tmp = GetComponentInChildren<TextMeshPro>();
+        cam = GameManager.Instance.getcamera();
+        
     }
 
     // Update is called once per frame
@@ -28,7 +29,6 @@ public class Collectable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Entered collider");
             tmp.GetComponent<MeshRenderer>().enabled = true;
         }
     }
@@ -37,13 +37,9 @@ public class Collectable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("within collider");
             tmp.transform.LookAt(cam.transform);
             if (Input.GetKey("e"))
             {
-                Debug.Log(gameObject.tag);
-                Debug.Log(gameObject.name);
-                Debug.Log(GameManager.Instance.name);
                 GameManager.Instance.addToInventory(gameObject.tag, gameObject.name);
                 Destroy(gameObject);
                 
@@ -56,7 +52,6 @@ public class Collectable : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("leaving collider");
             tmp.GetComponent<MeshRenderer>().enabled = false;
         }
     }
