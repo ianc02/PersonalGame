@@ -19,10 +19,9 @@ public class WeaponBehavior : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
         if (other.CompareTag("enemy"))
         {
-            Debug.Log("AHHHHHHH");
+            Debug.Log("Hit!");
             other.gameObject.GetComponent<EnemyMovement>().changeHealth(-damage);
         }
     }
