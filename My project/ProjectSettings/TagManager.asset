@@ -5,8 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Collectable
-  - rock
   - terrain
+  - weapon
+  - enemy
   layers:
   - Default
   - TransparentFX

@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Camera cam;
     public Terrain terrain;
     public GameObject rockprefab;
+    public GameObject woodprefab;
     private Collider pcollider;
 
     private void Awake()
@@ -36,7 +37,7 @@ public class GameManager : MonoBehaviour
         pcollider = player.GetComponent<CapsuleCollider>();
         RaycastHit hit;
         
-        for (int i = 0; i < 10001; i++)
+        for (int i = 0; i < 5001; i++)
         {
             Vector3 pos = new Vector3(Random.Range(2, 1998), 700, Random.Range(2, 1998));
             if (Physics.Raycast(pos, Vector3.down, out hit))
@@ -47,7 +48,14 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    Instantiate(rockprefab, hit.point, Quaternion.identity);
+                    if (i % 2 == 0)
+                    {
+                        Instantiate(rockprefab, hit.point, Quaternion.identity);
+                    }
+                    else
+                    {
+                        Instantiate(woodprefab, hit.point, Quaternion.identity);
+                    }
                 } 
             }
                 

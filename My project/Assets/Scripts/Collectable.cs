@@ -7,13 +7,11 @@ using TMPro;
 public class Collectable : MonoBehaviour
 {
 
-    private Collider collider;
     private TextMeshPro tmp;
     private Camera cam;
     // Start is called before the first frame update
     void Start()
     {
-        collider = GetComponent<SphereCollider>();
         tmp = GetComponentInChildren<TextMeshPro>();
         cam = GameManager.Instance.getcamera();
         

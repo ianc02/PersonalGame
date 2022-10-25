@@ -17,14 +17,19 @@ public class animationStateController : MonoBehaviour
     {
         bool isWalking = animator.GetBool("IsWalking");
         bool isRunning = animator.GetBool("IsRunning");
+        bool isAttacking = animator.GetBool("IsAttacking");
         
         bool forwardPressed = Input.GetKey("w");
         bool shiftPressed = Input.GetKey("left shift");
         bool spacePressed = Input.GetKey("space");
         float mouseRotation = Input.GetAxis("Mouse Y");
-        
+        bool mouse0click = Input.GetMouseButton(0);
 
-
+        animator.SetBool("IsAttacking", false) ;
+        if (mouse0click)
+        {
+            animator.SetBool("IsAttacking", true);
+        }
         if (forwardPressed)
         {
             if (shiftPressed)
