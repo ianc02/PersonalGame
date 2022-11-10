@@ -14,11 +14,23 @@ public class GameManager : MonoBehaviour
     public Canvas inventory;
     public Canvas pauseMenu;
     public GameObject player;
+    public GameObject camtalk;
     public Camera cam;
     public Terrain terrain;
     public GameObject rockprefab;
     public GameObject woodprefab;
+    public GameObject textBox;
+    public Canvas dialogueCanvas;
     private Collider pcollider;
+    private int progress;
+    private bool lerp;
+    private TextMeshProUGUI dialogueText;
+    private bool talk = false;
+    private ArrayList dialogue;
+    private int clicks;
+    private bool canattack = true;
+    private Vector3 camoriginalpos;
+    private Quaternion camoriginalrot;
 
     private void Awake()
     {
@@ -34,6 +46,10 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        progress = 0;
+        lerp = false;
+        dialogue = new ArrayList();
+        dialogueText = textBox.GetComponent<TextMeshProUGUI>();
         pcollider = player.GetComponent<CapsuleCollider>();
         RaycastHit hit;
         
@@ -78,7 +94,7 @@ public class GameManager : MonoBehaviour
                 pauseGame();
             }
         }
-        if (Input.GetKeyDown("escape"))
+        else if (Input.GetKeyDown("escape"))
         {
             if (pauseMenu.gameObject.active)
             {
@@ -90,12 +106,62 @@ public class GameManager : MonoBehaviour
                 pauseMenu.gameObject.SetActive(true);
                 pauseGame();
             }
+
+           
         }
+        
+        if (lerp)
+        {
+            if (talk)
+            {
+                cam.transform.position = Vector3.Lerp(cam.transform.position, camtalk.transform.position, Time.deltaTime * 2f);
+                cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camtalk.transform.rotation, Time.deltaTime * 2f);
+            }
+            else
+            {
+                cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
+                cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
+                if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
+                {
+                    lerp = false;
+                    player.GetComponent<Movement>().setCanMove(true);
+                    canattack = true;
+                }
+            }
+
+        }
+        
+        if (talk)
+        {
+            Debug.Log(1);
+            
+            if (clicks < dialogue.Count)
+            {
+
+               dialogueText.text = (string) dialogue[clicks];
+               if (Input.GetMouseButtonDown(0))
+                {
+                    clicks += 1;
+                }
+            }
+            else
+            {
+                dialogueCanvas.gameObject.SetActive(false);
+                dialogue = new ArrayList();
+                talk = false;
+            }
+        }
+        
+
 
         
 
     }
 
+    public GameObject getPlayer()
+    {
+        return player;
+    }
     public void pauseGame()
     {
         Time.timeScale = 0f;
@@ -149,4 +215,42 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+
+
+    public void oldWomanDialogue()
+    {
+
+        cam.GetComponent<CameraCollision>().enabled = false;
+        player.GetComponent<Movement>().setCanMove(false);
+        lerp = true;
+
+        
+        
+        
+        if (progress == 0)
+        {
+            dialogue.Add("Hello young traveler, nice to see you again! You look like you could use an adventure!");
+            dialogue.Add("Luckily I have just the one for you. As you may have noticed, a dark presence has started taking over.");
+            dialogue.Add("The land is covered in monsters, and we need someone to clear them out.");
+            dialogue.Add("If you wish to start this perilous adventure, head to the mining shack in the southwest");
+            dialogue.Add("Once you grab the tool from there, head to the north most cave and survive.");
+            dialogue.Add("Good luck!");
+     
+        }
+        clicks = 0;
+        talk = true;
+        canattack = false;
+        dialogueCanvas.gameObject.SetActive(true);
+        camoriginalpos = cam.transform.position;
+        camoriginalrot = cam.transform.rotation;
+
+
+    }
+
+    public bool canAttack()
+    {
+        return canattack;
+    }
+
 }

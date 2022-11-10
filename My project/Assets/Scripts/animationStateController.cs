@@ -26,9 +26,12 @@ public class animationStateController : MonoBehaviour
         bool mouse0click = Input.GetMouseButton(0);
 
         animator.SetBool("IsAttacking", false) ;
-        if (mouse0click)
+        if (GameManager.Instance.canAttack())
         {
-            animator.SetBool("IsAttacking", true);
+            if (mouse0click)
+            {
+                animator.SetBool("IsAttacking", true);
+            }
         }
         if (forwardPressed)
         {
