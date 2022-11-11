@@ -114,5 +114,6 @@ public class OpenChest : MonoBehaviour
         {
             lerp = true;
         }
+        text.enabled = false;
     }
 }
