@@ -243,9 +243,9 @@ public class GameManager : MonoBehaviour
         player.GetComponent<Movement>().setCanMove(false);
         lerp = true;
 
-        
-        
-        
+
+
+
         if (progress == 0)
         {
             dialogue.Add("Hello young traveler, nice to see you again! You look like you could use an adventure!");
@@ -254,7 +254,10 @@ public class GameManager : MonoBehaviour
             dialogue.Add("If you wish to start this perilous adventure, head to the mining shack in the southwest");
             dialogue.Add("Once you grab the tool from there, head to the north most cave and survive.");
             dialogue.Add("Good luck!");
-     
+        }
+        else if (progress == 1)
+        {
+            dialogue.Add("Great job! Now take that lantern to the North most cave in the mountains and find the hidden treasure!");
         }
         clicks = 0;
         talk = true;
@@ -274,6 +277,7 @@ public class GameManager : MonoBehaviour
 
     public void activateLantern()
     {
+        hasLantern = true;
         lantern.active = true;
     }
     public void deactivateLantern()
@@ -287,7 +291,7 @@ public class GameManager : MonoBehaviour
     }
     public void activateSnorkel()
     {
-        hasLantern = true;
+        
         lantern.active = true;
     }
     public void deactivateSnorkel()
@@ -301,4 +305,8 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadSceneAsync(scene);
     }
 
+    public void addProgress()
+    {
+        progress += 1;
+    }
 }

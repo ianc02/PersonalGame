@@ -8,6 +8,7 @@ public class Teleporter : MonoBehaviour
     public Material sunset;
     public Material black;
     public GameObject light;
+    public GameObject cavernprops;
     
     // Start is called before the first frame update
     public Vector3 pos;
@@ -26,17 +27,20 @@ public class Teleporter : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.transform.position = pos;
+           
             if (pos.y < 0)
             {
                 RenderSettings.ambientIntensity = 0;
                 light.active = false;
+                cavernprops.active = true;
             }
             else
             {
                 RenderSettings.ambientIntensity = 1;
                 light.active = true;
+                cavernprops.active = false;
             }
+            other.transform.position = pos;
         }
     }
 }

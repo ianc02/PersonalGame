@@ -77,11 +77,13 @@ public class OpenChest : MonoBehaviour
                 {
                     Destroy(tool);
                     GameManager.Instance.activateLantern();
+                    GameManager.Instance.addProgress();
                 }
                 if (tool.name.Equals("snorkel"))
                 {
                     Destroy(tool);
                     GameManager.Instance.canusesnorkel();
+                    GameManager.Instance.addProgress();
                 }
             }
         }
