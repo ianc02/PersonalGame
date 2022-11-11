@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEditor;
 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
     public GameObject woodprefab;
     public GameObject textBox;
     public Canvas dialogueCanvas;
+    public GameObject lantern;
+    public GameObject snorkel;
     private Collider pcollider;
     private int progress;
     private bool lerp;
@@ -31,6 +34,8 @@ public class GameManager : MonoBehaviour
     private bool canattack = true;
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
+    private bool usensorkel = false;
+    private bool hasLantern = false;
 
     private void Awake()
     {
@@ -81,6 +86,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hasLantern) {
+            if (Input.GetKeyDown("l"))
+            {
+                if (lantern.active)
+                {
+                    deactivateLantern();
+                }
+                else
+                {
+                    activateLantern();
+                }
+            }
+        }
         if (Input.GetKeyDown("q"))
         {
             if (inventory.gameObject.active)
@@ -251,6 +269,36 @@ public class GameManager : MonoBehaviour
     public bool canAttack()
     {
         return canattack;
+    }
+
+
+    public void activateLantern()
+    {
+        lantern.active = true;
+    }
+    public void deactivateLantern()
+    {
+        lantern.active = false;
+    }
+
+    public void canusesnorkel()
+    {
+        usensorkel = true;
+    }
+    public void activateSnorkel()
+    {
+        hasLantern = true;
+        lantern.active = true;
+    }
+    public void deactivateSnorkel()
+    {
+        lantern.active = false;
+    }
+
+
+    public void loadScene(string scene)
+    {
+        SceneManager.LoadSceneAsync(scene);
     }
 
 }

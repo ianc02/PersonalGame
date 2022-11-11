@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Teleporter : MonoBehaviour
 {
+
+    public Material sunset;
+    public Material black;
+    public GameObject light;
+    
     // Start is called before the first frame update
     public Vector3 pos;
     void Start()
@@ -21,8 +26,17 @@ public class Teleporter : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("yooo");
             other.transform.position = pos;
+            if (pos.y < 0)
+            {
+                RenderSettings.ambientIntensity = 0;
+                light.active = false;
+            }
+            else
+            {
+                RenderSettings.ambientIntensity = 1;
+                light.active = true;
+            }
         }
     }
 }
