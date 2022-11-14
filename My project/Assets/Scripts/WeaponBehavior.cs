@@ -21,8 +21,12 @@ public class WeaponBehavior : MonoBehaviour
     {
         if (other.CompareTag("enemy"))
         {
-            Debug.Log("Hit!");
+            
             other.gameObject.GetComponent<EnemyMovement>().changeHealth(-damage);
+        }
+        if (other.CompareTag("Gronch"))
+        {
+            other.GetComponentInParent<GronchMovement>().damage();
         }
     }
 }

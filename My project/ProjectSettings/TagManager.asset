@@ -8,6 +8,7 @@ TagManager:
   - terrain
   - weapon
   - enemy
+  - Gronch
   layers:
   - Default
   - TransparentFX

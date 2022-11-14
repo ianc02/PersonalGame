@@ -93,27 +93,34 @@ public class OpenChest : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log(1);
-        text.enabled = true;
-       
+        if (other.CompareTag("Player"))
+        {
+            text.enabled = true;
+        }
     }
 
     public void OnTriggerStay(Collider other)
     {
-        if (Input.GetKey("e"))
+        if (other.CompareTag("Player"))
         {
-            
-            lerp = true;
-            text.enabled = false;
+            if (Input.GetKey("e"))
+            {
+
+                lerp = true;
+                text.enabled = false;
+            }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (open)
+        if (other.CompareTag("Player"))
         {
-            lerp = true;
+            if (open)
+            {
+                lerp = true;
+            }
+            text.enabled = false;
         }
-        text.enabled = false;
     }
 }
