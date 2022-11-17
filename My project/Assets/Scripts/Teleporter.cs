@@ -9,19 +9,11 @@ public class Teleporter : MonoBehaviour
     public Material black;
     public GameObject light;
     public GameObject cavernprops;
+    public GameObject cavernMobs;
     
     // Start is called before the first frame update
     public Vector3 pos;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     public void OnTriggerEnter(Collider other)
     {
@@ -31,14 +23,19 @@ public class Teleporter : MonoBehaviour
             if (pos.y < 0)
             {
                 RenderSettings.ambientIntensity = 0;
+                RenderSettings.skybox = null;
                 light.active = false;
                 cavernprops.active = true;
+                cavernMobs.active = true;
             }
             else
             {
+                RenderSettings.skybox = sunset; 
                 RenderSettings.ambientIntensity = 1;
+
                 light.active = true;
                 cavernprops.active = false;
+                cavernMobs.active = false;
             }
             other.transform.position = pos;
         }

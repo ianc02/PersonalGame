@@ -6,16 +6,7 @@ public class WeaponBehavior : MonoBehaviour
 {
     public float damage;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     public void OnTriggerEnter(Collider other)
     {
@@ -27,6 +18,10 @@ public class WeaponBehavior : MonoBehaviour
         if (other.CompareTag("Gronch"))
         {
             other.GetComponentInParent<GronchMovement>().damage();
+        }
+        if (other.CompareTag("Elemental"))
+        {
+            other.GetComponentInParent<ElementalMovement>().damage();
         }
     }
 }

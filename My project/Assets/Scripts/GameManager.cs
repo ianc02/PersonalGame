@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
     private bool usensorkel = false;
-    private bool hasLantern = false;
+    private bool hasLantern = true;
 
     private void Awake()
     {
