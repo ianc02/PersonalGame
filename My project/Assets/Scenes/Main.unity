@@ -15,8 +15,8 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  m_FogMode: 3
+  m_FogColor: {r: 0.333, g: 0.333, b: 0.333, a: 1}
+  m_FogMode: 2
   m_FogDensity: 0
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
@@ -2161,7 +2161,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &58936249
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -8234,9 +8234,10 @@ Transform:
   m_GameObject: {fileID: 97532782}
   m_LocalRotation: {x: 0.1704999, y: -0.0352732, z: -0.006107477, w: 0.98470724}
   m_LocalPosition: {x: 0, y: 4, z: -6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 628.85455, y: 628.85455, z: 628.85455}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2058249740}
   m_Father: {fileID: 390184709}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 19.594, y: -4.356, z: -1.463}
@@ -8247,7 +8248,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97532782}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd15e7e0ee81bf442af33cd1b811c456, type: 3}
   m_Name: 
@@ -49613,16 +49614,16 @@ MonoBehaviour:
     slopeRange: {x: 0, y: 60}
     curvatureRange: {x: 0, y: 1}
     layerMasks:
-    - name: Ground_Layer_02
-      layerID: 4
-      threshold: 0.293
-    instanceCount: 0
+    - name: Grass_Soil_TerrainLayer
+      layerID: 10
+      threshold: 0
+    instanceCount: 595
     prefabs:
     - index: 4
       probability: 100
       prefab: {fileID: 8916932963258096687, guid: ceda9be89f930ac42b32ff5ae10598cd,
         type: 3}
-    distance: 5
+    distance: 10
     scaleRange: {x: 1.6, y: 2}
     sinkAmount: 0
   - enabled: 1
@@ -49635,21 +49636,21 @@ MonoBehaviour:
     slopeRange: {x: 0, y: 60}
     curvatureRange: {x: 0, y: 1}
     layerMasks:
-    - name: Ground_Layer_02
-      layerID: 4
-      threshold: 0.738
-    instanceCount: 0
+    - name: Grass_Soil_TerrainLayer
+      layerID: 10
+      threshold: 0
+    instanceCount: 935
     prefabs:
     - index: 5
       probability: 100
       prefab: {fileID: 919132149155446097, guid: 2a5e649cde00dd847885c694eb77f1fb,
         type: 3}
-    distance: 5
+    distance: 10
     scaleRange: {x: 1.5999999, y: 2}
     sinkAmount: 0
   - enabled: 1
     name: PT_Pine_Tree_03_dead
-    seed: 0
+    seed: 20828
     probability: 46.4
     collisionCheck: 0
     rejectUnderwater: 0
@@ -49657,38 +49658,38 @@ MonoBehaviour:
     slopeRange: {x: 0, y: 60}
     curvatureRange: {x: 0, y: 1}
     layerMasks:
-    - name: Ground_Layer_02
-      layerID: 4
+    - name: Grass_Soil_TerrainLayer
+      layerID: 10
       threshold: 0
-    instanceCount: 8
+    instanceCount: 782
     prefabs:
     - index: 6
       probability: 100
       prefab: {fileID: 919132149155446097, guid: 021e9eaa88033da4c94bcdeddffe6562,
         type: 3}
-    distance: 4
+    distance: 8
     scaleRange: {x: 1.4300653, y: 1.8300654}
     sinkAmount: 0
   - enabled: 1
     name: PT_Pine_Tree_03_stump
-    seed: 12226
-    probability: 10
+    seed: 33008
+    probability: 21
     collisionCheck: 0
     rejectUnderwater: 0
     heightRange: {x: 0, y: 1000}
     slopeRange: {x: 0, y: 60}
     curvatureRange: {x: 0, y: 1}
     layerMasks:
-    - name: Ground_Layer_02
-      layerID: 4
+    - name: Grass_Soil_TerrainLayer
+      layerID: 10
       threshold: 0
-    instanceCount: 0
+    instanceCount: 261
     prefabs:
     - index: 7
       probability: 100
       prefab: {fileID: 5899581772680663418, guid: 7d2041206c208f54991b199315b8f7a8,
         type: 3}
-    distance: 5
+    distance: 10
     scaleRange: {x: 1.5999999, y: 2}
     sinkAmount: 0
   - enabled: 1
@@ -49701,16 +49702,16 @@ MonoBehaviour:
     slopeRange: {x: 0, y: 60}
     curvatureRange: {x: 0, y: 1}
     layerMasks:
-    - name: Ground_Layer_02
-      layerID: 4
+    - name: Grass_Soil_TerrainLayer
+      layerID: 10
       threshold: 0
-    instanceCount: 0
+    instanceCount: 45
     prefabs:
     - index: 8
       probability: 100
       prefab: {fileID: 919132149155446097, guid: e9a01d2a3de15954eb2cccf4df7f3d5b,
         type: 3}
-    distance: 11.6
+    distance: 10
     scaleRange: {x: 1.5999999, y: 2}
     sinkAmount: 0
   grassPrefabs:
@@ -58530,6 +58531,89 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9092c1811158271428faa5d8adc2a966, type: 3}
+--- !u!1 &2058249739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2058249740}
+  - component: {fileID: 2058249743}
+  - component: {fileID: 2058249742}
+  m_Layer: 6
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2058249740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058249739}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: -2, y: -2, z: -2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 97532786}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &2058249742
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058249739}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0d8b67629d58df146bf1c611a95a2ac8, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2058249743
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2058249739}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2061115170
 GameObject:
   m_ObjectHideFlags: 0
@@ -61381,12 +61465,12 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.6313726, b: 1, a: 1}
-  deepColor: {r: 0, g: 0.42732504, b: 0.6784314, a: 1}
+  deepColor: {r: 0, g: 0.42732137, b: 0.6784314, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0, g: 0.22732505, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22732139, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.30183482, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30183113, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
@@ -91702,12 +91786,12 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.6313726, b: 1, a: 1}
-  deepColor: {r: 0, g: 0.427325, b: 0.6784314, a: 1}
+  deepColor: {r: 0, g: 0.4273214, b: 0.6784314, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0, g: 0.22732502, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22732142, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.3018348, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30183116, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0

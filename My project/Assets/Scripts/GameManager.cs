@@ -97,26 +97,32 @@ public class GameManager : MonoBehaviour
             {
                 if (player.transform.position.x < 400)
                 {
+                    cam.transform.GetChild(0).gameObject.active = true;
                     float density = Mathf.Min((Mathf.Pow(((50 -(Mathf.Max(player.transform.position.x, player.transform.position.z)-350)) / 50f),3) * fogDens), fogDens);
+                    cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color =new Color(1f,1f,1f,Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)),1));
                     RenderSettings.fogDensity = density;
                     if (density > 0.1)
                     {
                         RenderSettings.skybox = fogsky;
+                        
 
                     }
                     else
                     {
                         RenderSettings.skybox = sunset;
+                        
                     }
                 }
                 else
                 {
                     RenderSettings.fogDensity = 0;
+                    cam.transform.GetChild(0).gameObject.active = false;
                 }
             }
             else
             {
                 RenderSettings.fogDensity = 0;
+                cam.transform.GetChild(0).gameObject.active = false;
             }
         }
     }
