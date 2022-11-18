@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     public Canvas dialogueCanvas;
     public GameObject lantern;
     public GameObject snorkel;
+    public float fogDens;
+    public Material sunset;
+    public Material fogsky;
     private Collider pcollider;
     private int progress;
     private bool lerp;
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour
         dialogue = new ArrayList();
         dialogueText = textBox.GetComponent<TextMeshProUGUI>();
         pcollider = player.GetComponent<CapsuleCollider>();
+        StartCoroutine(fogDensity());
         RaycastHit hit;
         
         for (int i = 0; i < 5001; i++)
@@ -83,9 +87,43 @@ public class GameManager : MonoBehaviour
             
         }
     }
+    private IEnumerator fogDensity()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.05f);
+        while (true)
+        {
+            yield return wait;
+            if (player.transform.position.z < 400)
+            {
+                if (player.transform.position.x < 400)
+                {
+                    float density = Mathf.Min((Mathf.Pow(((50 -(Mathf.Max(player.transform.position.x, player.transform.position.z)-350)) / 50f),3) * fogDens), fogDens);
+                    RenderSettings.fogDensity = density;
+                    if (density > 0.1)
+                    {
+                        RenderSettings.skybox = fogsky;
+
+                    }
+                    else
+                    {
+                        RenderSettings.skybox = sunset;
+                    }
+                }
+                else
+                {
+                    RenderSettings.fogDensity = 0;
+                }
+            }
+            else
+            {
+                RenderSettings.fogDensity = 0;
+            }
+        }
+    }
     // Update is called once per frame
     void Update()
     {
+        
         if (hasLantern) {
             if (Input.GetKeyDown("l"))
             {
