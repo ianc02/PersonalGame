@@ -42,6 +42,12 @@ public class GameManager : MonoBehaviour
     private Quaternion camoriginalrot;
     private bool usensorkel = false;
     private bool hasLantern = true;
+    private GameObject curNode;
+    private GameObject prevNode;
+    private GameObject nextNode;
+    private GameObject ctp;
+    private GameObject ctn;
+    private LinkedList<GameObject> signll;
 
     private void Awake()
     {
@@ -62,6 +68,11 @@ public class GameManager : MonoBehaviour
         dialogue = new ArrayList();
         dialogueText = textBox.GetComponent<TextMeshProUGUI>();
         pcollider = player.GetComponent<CapsuleCollider>();
+        signll = new LinkedList<GameObject>();
+        foreach (Transform child in signs.transform) 
+        {
+            signll.AddLast(child.gameObject);
+        }
         StartCoroutine(fogDensity());
         RaycastHit hit;
         
@@ -90,6 +101,100 @@ public class GameManager : MonoBehaviour
             
         }
     }
+
+    public void nodeChanger(GameObject collided)
+    {
+        Debug.Log(signll.Count);
+        Debug.Log(collided.name);
+        Debug.Log(signll.First);
+        Debug.Log(signll.First.Value);
+        Debug.Log(signll.First.Value.name);
+        if (curNode == null)
+        {
+            Debug.Log(0);
+            if (collided.Equals(signll.First.Value))
+            {
+                Debug.Log(1);
+                curNode = collided;
+                nextNode = signll.Find(curNode).Next.Value;
+                Debug.Log(nextNode.name);
+                ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Vector3 between2 = new Vector3();
+                between2 = nextNode.transform.position - curNode.transform.position;
+                float dist2 = between2.magnitude;
+                Vector3 scale = ctn.transform.localScale;
+                scale.Set(15f, 15f, dist2);
+                ctn.transform.localScale = scale;
+                ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+                ctn.transform.LookAt(nextNode.transform.position);
+                //ctn.GetComponent<MeshRenderer>().enabled = false;
+                //ctn.GetComponent<BoxCollider>().enabled = false;
+            }
+            else
+            {
+                Debug.Log(3);
+                fogOut();
+            }
+            
+        }
+        else
+        {
+            Debug.Log(4);
+            
+            if (collided.Equals(signll.Find(curNode).Next.Value) || collided.Equals(signll.Find(curNode).Previous.Value))
+            {
+                Debug.Log(5);
+                prevNode = curNode;
+                curNode = collided;
+                if (ctp != null)
+                {
+                    Destroy(ctp);
+                }
+                ctp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Vector3 between = new Vector3();
+                between = curNode.transform.position - prevNode.transform.position;
+                float dist = between.magnitude;
+                Vector3 scale = ctp.transform.localScale;
+                scale.Set(15f, 15f, dist);
+                ctp.transform.localScale = scale;
+                ctp.transform.position = prevNode.transform.position + (between / 2.0f);
+                ctp.transform.LookAt(curNode.transform.position);
+                //ctp.GetComponent<MeshRenderer>().enabled = false;
+                //ctp.GetComponent<BoxCollider>().enabled = false;
+
+                if (signll.Find(curNode).Next !=null)
+                {
+                    Debug.Log(6);
+                    nextNode = signll.Find(curNode).Next.Value;
+                    Destroy(ctn);
+                    ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Vector3 between2 = new Vector3();
+                    between2 = nextNode.transform.position - curNode.transform.position;
+                    float dist2 = between2.magnitude;
+                    Vector3 scale2 = ctn.transform.localScale;
+                    scale2.Set(15f, 15f, dist2);
+                    ctn.transform.localScale = scale2;
+                    ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+                    ctn.transform.LookAt(nextNode.transform.position);
+                    //ctn.GetComponent<MeshRenderer>().enabled = false;
+                    //ctn.GetComponent<BoxCollider>().enabled = false;
+                }
+                
+            }
+            else
+            {
+                Debug.Log(7);
+                fogOut();
+            }
+        }
+    }
+
+    private IEnumerator fogOut()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.1f);
+        yield return wait;
+        player.transform.position = new Vector3(-203.699997f, -22.7000008f, 596.200012f);
+    }
     private IEnumerator fogDensity()
     {
         WaitForSeconds wait = new WaitForSeconds(0.05f);
@@ -100,6 +205,7 @@ public class GameManager : MonoBehaviour
             {
                 if (player.transform.position.x < 400)
                 {
+                    //signs.active = true;
                     cam.transform.GetChild(0).gameObject.active = true;
                     float density = Mathf.Min((Mathf.Pow(((50 -(Mathf.Max(player.transform.position.x, player.transform.position.z)-350)) / 50f),3) * fogDens), fogDens);
                     cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color =new Color(1f,1f,1f,Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)),1));
@@ -118,12 +224,14 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
+                    //signs.active = false;
                     RenderSettings.fogDensity = 0;
                     cam.transform.GetChild(0).gameObject.active = false;
                 }
             }
             else
             {
+                //signs.active = false;
                 RenderSettings.fogDensity = 0;
                 cam.transform.GetChild(0).gameObject.active = false;
             }
