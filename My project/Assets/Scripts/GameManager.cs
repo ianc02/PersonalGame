@@ -45,9 +45,11 @@ public class GameManager : MonoBehaviour
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
-    private GameObject ctp;
-    private GameObject ctn;
+    public GameObject ctp;
+    public GameObject ctn;
     private LinkedList<GameObject> signll;
+    private bool slowfog = true;
+    private bool reachedEndMaze=false;
 
     private void Awake()
     {
@@ -101,49 +103,61 @@ public class GameManager : MonoBehaviour
             
         }
     }
-
+    public IEnumerator SignGone()
+    {
+        reachedEndMaze = true;
+        WaitForSeconds s = new WaitForSeconds(3);
+        yield return s;
+        signs.active = false;
+        slowfog = false;
+        RenderSettings.skybox = sunset;
+        RenderSettings.fogDensity = 0;
+        cam.transform.GetChild(0).gameObject.active = false;
+        
+        StopCoroutine(fogOut());
+        Destroy(ctn);
+        Destroy(ctp);
+        slowfog = false;
+        signs.active = false;
+        slowfog = false;
+        RenderSettings.skybox = sunset;
+        RenderSettings.fogDensity = 0;
+        cam.transform.GetChild(0).gameObject.active = false;
+    }
     public void nodeChanger(GameObject collided)
     {
-        Debug.Log(signll.Count);
-        Debug.Log(collided.name);
-        Debug.Log(signll.First);
-        Debug.Log(signll.First.Value);
-        Debug.Log(signll.First.Value.name);
+        if (collided.gameObject.name.Equals("ArrowSign (40)"))
+        {
+            slowfog = false;
+            StartCoroutine(SignGone());
+        }
         if (curNode == null)
         {
-            Debug.Log(0);
             if (collided.Equals(signll.First.Value))
             {
-                Debug.Log(1);
                 curNode = collided;
                 nextNode = signll.Find(curNode).Next.Value;
-                Debug.Log(nextNode.name);
                 ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 Vector3 between2 = new Vector3();
                 between2 = nextNode.transform.position - curNode.transform.position;
                 float dist2 = between2.magnitude;
                 Vector3 scale = ctn.transform.localScale;
-                scale.Set(15f, 15f, dist2);
+                scale.Set(15f, 15f, dist2+10f);
                 ctn.transform.localScale = scale;
                 ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
                 ctn.transform.LookAt(nextNode.transform.position);
-                //ctn.GetComponent<MeshRenderer>().enabled = false;
-                //ctn.GetComponent<BoxCollider>().enabled = false;
-            }
-            else
-            {
-                Debug.Log(3);
-                fogOut();
+                ctn.GetComponent<MeshRenderer>().enabled = false;
+                ctn.GetComponent<BoxCollider>().isTrigger = true;
+                ctn.AddComponent<PathwayColliion>();
+                ctn.layer = 8;
             }
             
         }
         else
         {
-            Debug.Log(4);
             
             if (collided.Equals(signll.Find(curNode).Next.Value) || collided.Equals(signll.Find(curNode).Previous.Value))
             {
-                Debug.Log(5);
                 prevNode = curNode;
                 curNode = collided;
                 if (ctp != null)
@@ -155,16 +169,17 @@ public class GameManager : MonoBehaviour
                 between = curNode.transform.position - prevNode.transform.position;
                 float dist = between.magnitude;
                 Vector3 scale = ctp.transform.localScale;
-                scale.Set(15f, 15f, dist);
+                scale.Set(15f, 15f, dist+10f);
                 ctp.transform.localScale = scale;
                 ctp.transform.position = prevNode.transform.position + (between / 2.0f);
                 ctp.transform.LookAt(curNode.transform.position);
-                //ctp.GetComponent<MeshRenderer>().enabled = false;
-                //ctp.GetComponent<BoxCollider>().enabled = false;
+                ctp.GetComponent<MeshRenderer>().enabled = false;
+                ctp.GetComponent<BoxCollider>().isTrigger = true;
+                ctp.AddComponent<PathwayColliion>();
+                ctp.layer = 8;
 
                 if (signll.Find(curNode).Next !=null)
                 {
-                    Debug.Log(6);
                     nextNode = signll.Find(curNode).Next.Value;
                     Destroy(ctn);
                     ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -172,28 +187,76 @@ public class GameManager : MonoBehaviour
                     between2 = nextNode.transform.position - curNode.transform.position;
                     float dist2 = between2.magnitude;
                     Vector3 scale2 = ctn.transform.localScale;
-                    scale2.Set(15f, 15f, dist2);
+                    scale2.Set(15f, 15f, dist2+10f);
                     ctn.transform.localScale = scale2;
                     ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
                     ctn.transform.LookAt(nextNode.transform.position);
-                    //ctn.GetComponent<MeshRenderer>().enabled = false;
-                    //ctn.GetComponent<BoxCollider>().enabled = false;
+                    ctn.GetComponent<MeshRenderer>().enabled = false;
+                    ctn.GetComponent<BoxCollider>().isTrigger = true;
+                    ctn.AddComponent<PathwayColliion>();
+                    ctn.layer = 8;
+                    
                 }
                 
-            }
-            else
-            {
-                Debug.Log(7);
-                fogOut();
             }
         }
     }
 
-    private IEnumerator fogOut()
+    public void outsidePathway()
     {
+        bool n = false;
+        bool p = false;
+        if (ctn != null)
+        {
+           
+           if (ctn.GetComponent<PathwayColliion>().inside)
+            {
+                n = true;
+            }
+        }
+        if (ctp != null) 
+        { 
+            if (ctp.GetComponent<PathwayColliion>().inside)
+            {
+                p = true;
+            }
+        }
+        if (!n && !p && !reachedEndMaze)
+        {
+            Debug.Log("yes");
+           StartCoroutine(fogOut());
+        }
+    }
+
+    public void inPathway()
+    {
+        StopCoroutine(fogOut());
+        slowfog = true;
+        RenderSettings.skybox = sunset;
+    }
+    public IEnumerator fogOut()
+    {
+        slowfog = false;
         WaitForSeconds wait = new WaitForSeconds(0.1f);
-        yield return wait;
-        player.transform.position = new Vector3(-203.699997f, -22.7000008f, 596.200012f);
+        deactivateLantern();
+        
+        while (RenderSettings.fogDensity < 0.98f)
+        {
+            yield return wait;
+            RenderSettings.fogDensity = RenderSettings.fogDensity+ 0.02f;
+            if (slowfog)
+            {
+                break;
+            }
+        }
+        if (!slowfog)
+        {
+            Vector3 tp = new Vector3();
+            tp.Set(77.6181488f, 97.7436829f, 454.7600f);
+            player.transform.position = tp;
+        }
+        slowfog = true;
+        RenderSettings.skybox = sunset;
     }
     private IEnumerator fogDensity()
     {
@@ -201,25 +264,37 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return wait;
-            if (player.transform.position.z < 400)
+            while (slowfog)
             {
-                if (player.transform.position.x < 400)
-                {
-                    //signs.active = true;
-                    cam.transform.GetChild(0).gameObject.active = true;
-                    float density = Mathf.Min((Mathf.Pow(((50 -(Mathf.Max(player.transform.position.x, player.transform.position.z)-350)) / 50f),3) * fogDens), fogDens);
-                    cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color =new Color(1f,1f,1f,Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)),1));
-                    RenderSettings.fogDensity = density;
-                    if (density > 0.1)
-                    {
-                        RenderSettings.skybox = fogsky;
-                        
+                yield return wait;
 
+                if (player.transform.position.z < 400)
+                {
+                    if (player.transform.position.x < 400)
+                    {
+
+                        //signs.active = true;
+                        cam.transform.GetChild(0).gameObject.active = true;
+                        float density = Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 3) * fogDens), fogDens);
+                        cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)), 1));
+                        RenderSettings.fogDensity = density;
+                        if (density > 0.1)
+                        {
+                            RenderSettings.skybox = fogsky;
+
+
+                        }
+                        else
+                        {
+                            RenderSettings.skybox = sunset;
+
+                        }
                     }
                     else
                     {
-                        RenderSettings.skybox = sunset;
-                        
+                        //signs.active = false;
+                        RenderSettings.fogDensity = 0;
+                        cam.transform.GetChild(0).gameObject.active = false;
                     }
                 }
                 else
@@ -228,12 +303,6 @@ public class GameManager : MonoBehaviour
                     RenderSettings.fogDensity = 0;
                     cam.transform.GetChild(0).gameObject.active = false;
                 }
-            }
-            else
-            {
-                //signs.active = false;
-                RenderSettings.fogDensity = 0;
-                cam.transform.GetChild(0).gameObject.active = false;
             }
         }
     }
