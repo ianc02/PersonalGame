@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     public float fogDens;
     public Material sunset;
     public Material fogsky;
+    public GameObject signs;
+
+
     private Collider pcollider;
     private int progress;
     private bool lerp;
