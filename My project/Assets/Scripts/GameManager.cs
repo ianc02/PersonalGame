@@ -106,16 +106,33 @@ public class GameManager : MonoBehaviour
     public IEnumerator SignGone()
     {
         reachedEndMaze = true;
-        WaitForSeconds s = new WaitForSeconds(0.05f);
-        StopCoroutine(fogOut());
-        Destroy(ctn);
-        Destroy(ctp);
-        signs.active = false;
+        WaitForSeconds s = new WaitForSeconds(0.1f);
+        reachedEndMaze = true;
         slowfog = false;
-        while (true)
+        StopCoroutine(fogOut());
+        reachedEndMaze = true;
+        slowfog = false;
+        StopCoroutine(fogDensity());
+        reachedEndMaze = true;
+        slowfog = false;
+        Destroy(ctn);
+        reachedEndMaze = true;
+        slowfog = false;
+        Destroy(ctp);
+        reachedEndMaze = true;
+        slowfog = false;
+        StopCoroutine(fogOut());
+        reachedEndMaze = true;
+        slowfog = false;
+        reachedEndMaze = true;
+        StopCoroutine(fogDensity());
+        reachedEndMaze = true;
+        slowfog = false;
+
+        while (RenderSettings.fogDensity > 0.02f)
         {
             yield return s;
-           
+            Debug.Log(RenderSettings.fogDensity);
             cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color.a - 0.02f);
             RenderSettings.fogDensity = RenderSettings.fogDensity - 0.02f;
             if (RenderSettings.fogDensity > 0.02)
@@ -127,10 +144,10 @@ public class GameManager : MonoBehaviour
             else
             {
                 RenderSettings.skybox = sunset;
-                break;
+                
             }
         }
-        
+        signs.active = false;
         RenderSettings.fogDensity = 0;
         cam.transform.GetChild(0).gameObject.active = false;
     }
@@ -233,7 +250,6 @@ public class GameManager : MonoBehaviour
         }
         if (!n && !p && !reachedEndMaze)
         {
-           Debug.Log("yes");
            StartCoroutine(fogOut());
         }
     }
@@ -253,7 +269,10 @@ public class GameManager : MonoBehaviour
         while (RenderSettings.fogDensity < 0.98f)
         {
             yield return wait;
-            RenderSettings.fogDensity = RenderSettings.fogDensity+ 0.02f;
+            if (!reachedEndMaze)
+            {
+                RenderSettings.fogDensity = RenderSettings.fogDensity + 0.02f;
+            }
             if (slowfog)
             {
                 break;
@@ -277,27 +296,39 @@ public class GameManager : MonoBehaviour
             while (slowfog)
             {
                 yield return wait;
-
-                if (player.transform.position.z < 400)
+                if (!reachedEndMaze)
                 {
-                    if (player.transform.position.x < 400)
+                    if (player.transform.position.z < 400)
                     {
-
-                        //signs.active = true;
-                        cam.transform.GetChild(0).gameObject.active = true;
-                        float density = Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 3) * fogDens), fogDens);
-                        cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)), 1));
-                        RenderSettings.fogDensity = density;
-                        if (density > 0.1)
+                        if (player.transform.position.x < 400)
                         {
-                            RenderSettings.skybox = fogsky;
+
+                            //signs.active = true;
+                            cam.transform.GetChild(0).gameObject.active = true;
+                            float density = Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 3) * fogDens), fogDens);
+
+                            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)), 1));
+                            if (!reachedEndMaze)
+                            {
+                                RenderSettings.fogDensity = density;
+                            }
+                            if (density > 0.1)
+                            {
+                                RenderSettings.skybox = fogsky;
 
 
+                            }
+                            else
+                            {
+                                RenderSettings.skybox = sunset;
+
+                            }
                         }
                         else
                         {
-                            RenderSettings.skybox = sunset;
-
+                            //signs.active = false;
+                            RenderSettings.fogDensity = 0;
+                            cam.transform.GetChild(0).gameObject.active = false;
                         }
                     }
                     else
@@ -306,12 +337,6 @@ public class GameManager : MonoBehaviour
                         RenderSettings.fogDensity = 0;
                         cam.transform.GetChild(0).gameObject.active = false;
                     }
-                }
-                else
-                {
-                    //signs.active = false;
-                    RenderSettings.fogDensity = 0;
-                    cam.transform.GetChild(0).gameObject.active = false;
                 }
             }
         }
@@ -385,7 +410,6 @@ public class GameManager : MonoBehaviour
         
         if (talk)
         {
-            Debug.Log(1);
             
             if (clicks < dialogue.Count)
             {
@@ -440,22 +464,15 @@ public class GameManager : MonoBehaviour
     public void addToInventory(string objectTag, string objectname)
     {
 
-        Debug.Log(objectTag);
-        Debug.Log(objectname);
         
         foreach (Transform child in inventory.transform)
         {
-            Debug.Log(0);
-            Debug.Log(child.name);
             if (child.name == objectTag)
             {
-                Debug.Log(1);
                 foreach(Transform grandchild in child)
                 {
                     if (grandchild.name == objectname)
                     {
-                        Debug.Log(2);
-                        Debug.Log(grandchild.name);
                         GameObject t = grandchild.gameObject;
                         TextMeshProUGUI r = t.GetComponentInChildren<TextMeshProUGUI>();
                         string e = r.text;
