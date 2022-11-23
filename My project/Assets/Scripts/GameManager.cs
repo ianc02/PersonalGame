@@ -223,7 +223,7 @@ public class GameManager : MonoBehaviour
         }
         if (!n && !p && !reachedEndMaze)
         {
-            Debug.Log("yes");
+           Debug.Log("yes");
            StartCoroutine(fogOut());
         }
     }
@@ -261,7 +261,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator fogDensity()
     {
         WaitForSeconds wait = new WaitForSeconds(0.05f);
-        while (true)
+        while (!reachedEndMaze)
         {
             yield return wait;
             while (slowfog)

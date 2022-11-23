@@ -66460,7 +66460,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4924a49721e39024b864f25e0ceee0f9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -35.98
+      value: -37.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4924a49721e39024b864f25e0ceee0f9,
         type: 3}
@@ -66506,6 +66506,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ArrowSign (42)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4924a49721e39024b864f25e0ceee0f9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4924a49721e39024b864f25e0ceee0f9, type: 3}
@@ -73447,12 +73452,12 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.6313726, b: 1, a: 1}
-  deepColor: {r: 0, g: 0.42730793, b: 0.6784314, a: 1}
+  deepColor: {r: 0, g: 0.42730665, b: 0.6784314, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0, g: 0.22730795, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22730666, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.30181772, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.3018164, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
@@ -105174,12 +105179,12 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
   shallowColor: {r: 0, g: 0.6313726, b: 1, a: 1}
-  deepColor: {r: 0, g: 0.4273079, b: 0.6784314, a: 1}
+  deepColor: {r: 0, g: 0.42730668, b: 0.6784314, a: 1}
   colorDepth: 2.59
-  horizonColor: {r: 0, g: 0.22730792, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.2273067, b: 0.8, a: 1}
   horizonDistance: 20
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.3018177, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30181643, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
