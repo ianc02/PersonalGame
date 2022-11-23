@@ -106,21 +106,31 @@ public class GameManager : MonoBehaviour
     public IEnumerator SignGone()
     {
         reachedEndMaze = true;
-        WaitForSeconds s = new WaitForSeconds(3);
-        yield return s;
-        signs.active = false;
-        slowfog = false;
-        RenderSettings.skybox = sunset;
-        RenderSettings.fogDensity = 0;
-        cam.transform.GetChild(0).gameObject.active = false;
-        
+        WaitForSeconds s = new WaitForSeconds(0.05f);
         StopCoroutine(fogOut());
         Destroy(ctn);
         Destroy(ctp);
-        slowfog = false;
         signs.active = false;
         slowfog = false;
-        RenderSettings.skybox = sunset;
+        while (true)
+        {
+            yield return s;
+           
+            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color.a - 0.02f);
+            RenderSettings.fogDensity = RenderSettings.fogDensity - 0.02f;
+            if (RenderSettings.fogDensity > 0.02)
+            {
+                RenderSettings.skybox = fogsky;
+
+
+            }
+            else
+            {
+                RenderSettings.skybox = sunset;
+                break;
+            }
+        }
+        
         RenderSettings.fogDensity = 0;
         cam.transform.GetChild(0).gameObject.active = false;
     }
