@@ -13,7 +13,7 @@ public class WeaponBehavior : MonoBehaviour
         if (other.CompareTag("enemy"))
         {
             
-            other.gameObject.GetComponent<EnemyMovement>().changeHealth(-damage);
+            other.gameObject.GetComponent<PlagueMovement>().damage();
         }
         if (other.CompareTag("Gronch"))
         {
@@ -22,6 +22,10 @@ public class WeaponBehavior : MonoBehaviour
         if (other.CompareTag("Elemental"))
         {
             other.GetComponentInParent<ElementalMovement>().damage();
+        }
+        if (other.CompareTag("Skeleton"))
+        {
+            other.GetComponentInParent<SkeletonMotion>().damage();
         }
     }
 }

@@ -10,6 +10,7 @@ TagManager:
   - enemy
   - Gronch
   - Elemental
+  - Skeleton
   layers:
   - Default
   - TransparentFX

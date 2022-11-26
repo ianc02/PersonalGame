@@ -102,6 +102,8 @@ public class ElementalMovement : MonoBehaviour
                         walking = true;
                         startwalk = Time.time;
                         animator.SetBool("Walking", true);
+                        chilling = false;
+                        animator.SetBool("Chilling", false);
                     }
                 }
             }
