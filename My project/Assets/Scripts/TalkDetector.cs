@@ -26,7 +26,7 @@ public class TalkDetector : MonoBehaviour
         {
             if (Input.GetKeyDown("e"))
             {
-                GameManager.Instance.oldWomanDialogue();
+                GameManager.Instance.oldWomanDialogue(gameObject);
                 GetComponentInParent<TownsfolkBehavior>().talking = true;
             }
             transform.LookAt(GameManager.Instance.getPlayer().transform);

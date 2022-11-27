@@ -54,6 +54,9 @@ public class TownsfolkBehavior : MonoBehaviour
                 animator.SetBool("Chilling", true);
                 agent.Stop();
                 agent.ResetPath();
+                oldpos = transform.position;
+                stoppos = transform.position;
+                newpos = transform.position;
             }
         }
         else

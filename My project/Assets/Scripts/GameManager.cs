@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
     private LinkedList<GameObject> signll;
     private bool slowfog = true;
     private bool reachedEndMaze=false;
+    private GameObject oldwoman;
 
     private void Awake()
     {
@@ -391,6 +392,8 @@ public class GameManager : MonoBehaviour
         {
             if (talk)
             {
+                oldwoman.GetComponent<TownsfolkBehavior>().talking = true;
+                oldwoman.transform.GetChild(0).gameObject.active = false;
                 cam.transform.position = Vector3.Lerp(cam.transform.position, camtalk.transform.position, Time.deltaTime * 2f);
                 cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camtalk.transform.rotation, Time.deltaTime * 2f);
             }
@@ -403,6 +406,9 @@ public class GameManager : MonoBehaviour
                     lerp = false;
                     player.GetComponent<Movement>().setCanMove(true);
                     canattack = true;
+
+                    oldwoman.GetComponent<TownsfolkBehavior>().talking = false;
+                    oldwoman.transform.GetChild(0).gameObject.active = true;
                 }
             }
 
@@ -487,9 +493,9 @@ public class GameManager : MonoBehaviour
 
 
 
-    public void oldWomanDialogue()
+    public void oldWomanDialogue(GameObject ow)
     {
-
+        oldwoman = ow;
         cam.GetComponent<CameraCollision>().enabled = false;
         player.GetComponent<Movement>().setCanMove(false);
         lerp = true;
@@ -516,6 +522,7 @@ public class GameManager : MonoBehaviour
         dialogueCanvas.gameObject.SetActive(true);
         camoriginalpos = cam.transform.position;
         camoriginalrot = cam.transform.rotation;
+
 
 
     }
