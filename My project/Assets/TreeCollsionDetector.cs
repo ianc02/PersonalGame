@@ -11,77 +11,75 @@ public class TreeCollsionDetector : MonoBehaviour
     TreeInstance[] pears;
     TreeInstance[] plums;
     private TerrainData terrainData;
+    private HashSet<TreeInstance> tempTrees;
+    private Terrain terrain;
+    private List<TreeInstance> oriTrees;
     private void Start()
     {
-        Terrain terrain = GetComponent<Terrain>();
+        
+        terrain = GetComponent<Terrain>();
         trees = terrain.terrainData.treeInstances;
-        apples = trees.Where(
-            t => t.prototypeIndex == 1
-            ).ToArray();
-        pears = trees.Where(
-            t => t.prototypeIndex == 2
-            ).ToArray();
-        plums = trees.Where(
-            t => t.prototypeIndex == 3
-            ).ToArray();
-        Debug.Log(apples.Length);
-        Debug.Log(pears.Length);
-        Debug.Log(plums.Length);
         terrainData = terrain.terrainData;
-        StartCoroutine(checkTrees());
+        oriTrees = new List<TreeInstance>();
+        foreach(TreeInstance t in trees)
+        {
+            oriTrees.Add(t);
+        }
+
         //
         //MAKE A COPY, DELETE TREE OR REPLACE, THEN SET TERRAINDATA>TREEINSTANDCES AS COPY
 
     }
-    public IEnumerator checkTrees()
-    {
-        WaitForSeconds wait = new WaitForSeconds(0.5f);
-        while (true)
-        {
-            yield return wait;
-            foreach (TreeInstance tree in apples)
-            {
-                var treeInstancePos = tree.position;
-                var localPos = new Vector3(treeInstancePos.x * terrainData.size.x, treeInstancePos.y * terrainData.size.y, treeInstancePos.z * terrainData.size.z);
-                var worldPos = Terrain.activeTerrain.transform.TransformPoint(localPos);
-                //Debug.Log(Vector3.Distance(tree.position, player.transform.position));
-                if (Vector3.Distance(worldPos, player.transform.position) < 5)
-                {
-                    Debug.Log("APPLESSS");
-                }
-                
-            }
-            foreach (TreeInstance tree in pears)
-            {
-                var treeInstancePos = tree.position;
-                var localPos = new Vector3(treeInstancePos.x * terrainData.size.x, treeInstancePos.y * terrainData.size.y, treeInstancePos.z * terrainData.size.z);
-                var worldPos = Terrain.activeTerrain.transform.TransformPoint(localPos);
-                //Debug.Log(Vector3.Distance(tree.position, player.transform.position));
-                if (Vector3.Distance(worldPos, player.transform.position) < 5)
-                {
-                    Debug.Log("PEAARSSS");
-                }
-                
-                
-            }
-            foreach (TreeInstance tree in plums)
-            {
-                var treeInstancePos = tree.position;
-                var localPos = new Vector3(treeInstancePos.x * terrainData.size.x, treeInstancePos.y * terrainData.size.y, treeInstancePos.z * terrainData.size.z);
-                var worldPos = Terrain.activeTerrain.transform.TransformPoint(localPos);
-                if (Vector3.Distance(worldPos, player.transform.position) < 5)
-                {
-                    Debug.Log("PLUMSSSS");
-                    Destroy(tree);
-                }
-            }
-        }
-    }
-    private void Awake()
+    public void checkTrees()
     {
         
+        tempTrees = new HashSet<TreeInstance>();
+        float min = float.MaxValue;
+        
+        foreach (TreeInstance t in trees)
+        {
 
+            if (t.prototypeIndex == 1 || t.prototypeIndex == 2 || t.prototypeIndex == 3)
+            {
+                var treeInstancePos = t.position;
+                var localPos = new Vector3(treeInstancePos.x * terrainData.size.x, treeInstancePos.y * terrainData.size.y, treeInstancePos.z * terrainData.size.z);
+                var worldPos = Terrain.activeTerrain.transform.TransformPoint(localPos);
+                if (Vector3.Distance(player.transform.position, worldPos) > 3)
+                {
+                    tempTrees.Add(t);
+                }
+                else
+                {
+                    if (t.prototypeIndex == 3)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", "plum");
+                    }
+                    else if (t.prototypeIndex == 2)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", "pear");
+                    }
+                    if (t.prototypeIndex == 1)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", "apple");
+                    }
+                }
+            }
+            else
+            {
+               tempTrees.Add(t);
+            }
+        }
+        Debug.Log(tempTrees.Count);
+        terrain.terrainData.treeInstances = tempTrees.ToArray();
+        trees = terrain.terrainData.treeInstances;
     }
-    // Start is called before the first frame update
     
+    
+    // Start is called before the first frame update
+
+    public void OnApplicationQuit()
+    {
+        terrain.terrainData.treeInstances = oriTrees.ToArray();
+    }
+
 }

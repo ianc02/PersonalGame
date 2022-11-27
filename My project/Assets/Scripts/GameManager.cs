@@ -362,7 +362,10 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown("e"))
+        {
+            terrain.GetComponent<TreeCollsionDetector>().checkTrees();
+        }
         if (hasLantern) {
             if (Input.GetKeyDown("l"))
             {
