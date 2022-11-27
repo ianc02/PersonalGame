@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class HealthAndHunger : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class HealthAndHunger : MonoBehaviour
     public float hunger;
     public Image healthImage;
     public Image hungerImage;
+    public float timeToLoseHunger = 10;
 
     private float healthMax;
     private float hungerMax;
@@ -19,12 +21,27 @@ public class HealthAndHunger : MonoBehaviour
         healthMax = health;
         hungerMax = hunger;
         StartCoroutine(treeCheck());
+        StartCoroutine(getHungryTime());
+    }
+
+    public void Update()
+    {
+        if (GetComponentInParent<Movement>().isRunning)
+        {
+            timeToLoseHunger = 5;
+        }
     }
 
     // Update is called once per frame
-    void Update()
+    public IEnumerator getHungryTime()
     {
-        
+        WaitForSeconds wait = new WaitForSeconds(timeToLoseHunger);
+        while (true)
+        {
+            yield return wait;
+            changeHunger(-1);
+            wait = new WaitForSeconds(timeToLoseHunger);
+        }
     }
 
     public IEnumerator treeCheck()
@@ -70,6 +87,10 @@ public class HealthAndHunger : MonoBehaviour
 
     public void changeHunger(float value)
     {
+        if ((float)hunger / (float)hungerMax > 0.85f)
+        {
+            changeHealth(5);
+        }
         hunger += value;
         if (hunger > hungerMax)
         {
@@ -80,5 +101,22 @@ public class HealthAndHunger : MonoBehaviour
             hunger = 0;
         }
         hungerImage.fillAmount = Mathf.Clamp(hunger / hungerMax, 0, 1f);
+        
+    }
+
+    public void hungerHelper(string food)
+    {
+        Debug.Log(food);
+        Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
+        TextMeshProUGUI t = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TextMeshProUGUI>();
+        string e = t.text;
+        int num = int.Parse(e);
+        if (num > 0)
+        {
+            num -= 1;
+            t.SetText(num.ToString());
+            changeHunger(10);
+        }
+        
     }
 }

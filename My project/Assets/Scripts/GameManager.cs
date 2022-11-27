@@ -362,6 +362,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetKeyDown("e"))
         {
             terrain.GetComponent<TreeCollsionDetector>().checkTrees();
@@ -589,4 +590,18 @@ public class GameManager : MonoBehaviour
     {
         progress += 1;
     }
+
+
+    private RaycastHit castray()
+    {
+        Vector3 screenmouseposfar = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.farClipPlane);
+        Vector3 screenmouseposnear = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane);
+        Vector3 worldmouseposfar = Camera.main.ScreenToWorldPoint(screenmouseposfar);
+        Vector3 worldmouseposnear = Camera.main.ScreenToWorldPoint(screenmouseposnear);
+        RaycastHit hit;
+        Physics.Raycast(worldmouseposnear, worldmouseposfar - worldmouseposnear, out hit);
+        return hit;
+    }
+
+    
 }
