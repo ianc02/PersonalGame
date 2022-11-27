@@ -116,7 +116,7 @@ public class PlagueMovement : MonoBehaviour
                     
                     particles.transform.position = Vector3.MoveTowards(particles.transform.position, new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), spd*Time.deltaTime);
                     
-                    Debug.Log(Time.time - particleStartTime);
+                   
                     if (Time.time - particleStartTime > 3f || (particleGone && !particles.active))
                     {
                         particleGone = true;

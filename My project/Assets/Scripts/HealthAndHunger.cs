@@ -39,12 +39,14 @@ public class HealthAndHunger : MonoBehaviour
 
     public void treeChecker()
     {
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, 3, 8);
+        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, 3);
+        
         if (rangeChecks.Length > 0)
         {
             GameObject tree = rangeChecks[0].gameObject;
-            if (tree.CompareTag("apple") || tree.CompareTag("pear")|| tree.CompareTag("plum"))
+            if (tree.name.Equals("apple") || tree.name.Equals("pear")|| tree.name.Equals("plum"))
             {
+                Debug.Log(2);
                 GameManager.Instance.addToInventory("Collectable", tree.name);
             }
         }

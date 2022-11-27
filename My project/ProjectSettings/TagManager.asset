@@ -15,6 +15,7 @@ TagManager:
   - apple
   - pear
   - plum
+  - water
   layers:
   - Default
   - TransparentFX

@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
             signll.AddLast(child.gameObject);
         }
         StartCoroutine(fogDensity());
+        StartCoroutine(waterCheck());
         RaycastHit hit;
         
         for (int i = 0; i < 5001; i++)
@@ -102,6 +103,22 @@ public class GameManager : MonoBehaviour
             }
                 
             
+        }
+
+    }
+
+    public IEnumerator waterCheck()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.2f);
+        while (true)
+        {
+            int layermask = 1 << 4;
+            yield return wait;
+            RaycastHit hit;
+            if (Physics.Raycast(player.transform.position, Vector3.up, out hit,100f,layermask))
+            {
+                Debug.Log(hit.collider.gameObject.layer); 
+            }
         }
     }
     public IEnumerator SignGone()
@@ -475,10 +492,12 @@ public class GameManager : MonoBehaviour
         {
             if (child.name == objectTag)
             {
+                Debug.Log(3);
                 foreach(Transform grandchild in child)
                 {
                     if (grandchild.name == objectname)
                     {
+                        Debug.Log(4);
                         GameObject t = grandchild.gameObject;
                         TextMeshProUGUI r = t.GetComponentInChildren<TextMeshProUGUI>();
                         string e = r.text;
