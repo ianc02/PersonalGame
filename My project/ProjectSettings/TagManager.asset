@@ -12,6 +12,9 @@ TagManager:
   - Elemental
   - Skeleton
   - TownsFolk
+  - apple
+  - pear
+  - plum
   layers:
   - Default
   - TransparentFX
@@ -21,7 +24,7 @@ TagManager:
   - UI
   - Player
   - Obstruction
-  - 
+  - Tree
   - 
   - 
   - 

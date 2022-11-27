@@ -10,6 +10,7 @@ public class ParticleCollision : MonoBehaviour
         if (other.CompareTag("Player")){
             gameObject.active = false;
             GetComponentInParent<PlagueMovement>().particleGone = true;
+            other.gameObject.GetComponent<HealthAndHunger>().changeHealth(-10f);
         }
     }
 }
