@@ -11,6 +11,7 @@ TagManager:
   - Gronch
   - Elemental
   - Skeleton
+  - TownsFolk
   layers:
   - Default
   - TransparentFX
