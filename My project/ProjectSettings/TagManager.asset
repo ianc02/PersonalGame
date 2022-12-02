@@ -16,6 +16,7 @@ TagManager:
   - pear
   - plum
   - water
+  - WeaponsAndArmor
   layers:
   - Default
   - TransparentFX

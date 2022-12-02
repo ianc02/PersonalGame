@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     public Canvas inventory;
     public Canvas pauseMenu;
+    public Canvas shopCanvas;
     public GameObject player;
     public GameObject camtalk;
     public Camera cam;
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
     public Material fogsky;
     public GameObject signs;
     public GameObject coinPrefab;
+    public GameObject coinsInWallet;
+    public int coinCount = 0;
 
 
     private Collider pcollider;
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
     private LinkedList<GameObject> signll;
     private bool slowfog = true;
     private bool reachedEndMaze=false;
-    private GameObject oldwoman;
+    private GameObject talkingVillager;
 
     private void Awake()
     {
@@ -164,23 +167,26 @@ public class GameManager : MonoBehaviour
         {
             if (talk)
             {
-                oldwoman.GetComponent<TownsfolkBehavior>().talking = true;
-                oldwoman.transform.GetChild(0).gameObject.active = false;
+                talkingVillager.GetComponent<TownsfolkBehavior>().talking = true;
+                talkingVillager.transform.GetChild(0).gameObject.active = false;
                 cam.transform.position = Vector3.Lerp(cam.transform.position, camtalk.transform.position, Time.deltaTime * 2f);
                 cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camtalk.transform.rotation, Time.deltaTime * 2f);
             }
             else
             {
-                cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
-                cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
-                if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
+                if (!shopCanvas.gameObject.active)
                 {
-                    lerp = false;
-                    player.GetComponent<Movement>().setCanMove(true);
-                    canattack = true;
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
+                    cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
+                    if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
+                    {
+                        lerp = false;
+                        player.GetComponent<Movement>().setCanMove(true);
+                        canattack = true;
 
-                    oldwoman.GetComponent<TownsfolkBehavior>().talking = false;
-                    oldwoman.transform.GetChild(0).gameObject.active = true;
+                        talkingVillager.GetComponent<TownsfolkBehavior>().talking = false;
+                        talkingVillager.transform.GetChild(0).gameObject.active = true;
+                    }
                 }
             }
 
@@ -198,18 +204,38 @@ public class GameManager : MonoBehaviour
                     clicks += 1;
                 }
             }
-            else
+            if (clicks >= dialogue.Count)
             {
+                if (talkingVillager.name.Equals("Merchant")){
+                    shopCanvas.gameObject.active = true;
+                    coinsInWallet.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                    pauseGame();
+                }
                 dialogueCanvas.gameObject.SetActive(false);
                 dialogue = new ArrayList();
                 talk = false;
+                
             }
         }
-        
+    }
 
+    public void turnOffShop()
+    {
+        shopCanvas.gameObject.active = false;
+        resumeGame();
+    }
 
-        
-
+    public void purchase()
+    {
+        GameObject selection = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
+        TextMeshProUGUI stringcost = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TextMeshProUGUI>();
+        int cost = int.Parse(stringcost.text);
+        if (coinCount >= cost)
+        {
+            coinCount -= cost;
+            addToInventory(selection.tag, selection.name);
+            coinsInWallet.GetComponent<TextMeshProUGUI>().SetText(coinCount.ToString());
+        }
     }
 
     public IEnumerator waterCheck()
@@ -234,11 +260,13 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return wait;
-            Collider[] rangeChecks = Physics.OverlapSphere(player.transform.position, 2, 9);
+            int stupidfuckingshit = 1 << 9;
+            Collider[] rangeChecks = Physics.OverlapSphere(player.transform.position,2,stupidfuckingshit);
             foreach(Collider coin in rangeChecks)
             {
+                Debug.Log(coin.name);
                 addToInventory("Collectable", "coin");
-                //Destroy(coin.gameObject);
+                Destroy(coin.gameObject);
             }
         }
     }
@@ -278,17 +306,19 @@ public class GameManager : MonoBehaviour
         {
             if (child.name == objectTag)
             {
-                Debug.Log(3);
                 foreach(Transform grandchild in child)
                 {
                     if (grandchild.name == objectname)
                     {
-                        Debug.Log(4);
                         GameObject t = grandchild.gameObject;
                         TextMeshProUGUI r = t.GetComponentInChildren<TextMeshProUGUI>();
                         string e = r.text;
                         int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
                         num += 1;
+                        if (objectname.Equals("coin"))
+                        {
+                            coinCount = num;
+                        }
                         grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                     }
                 }
@@ -297,10 +327,24 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void merchantDialogue(GameObject m)
+    {
+        talkingVillager = m;
+        cam.GetComponent<CameraCollision>().enabled = false;
+        player.GetComponent<Movement>().setCanMove(false);
+        lerp = true;
 
+        dialogue.Add("Greetings traveler, please peruse my wares if you have the coin for it.");
+        clicks = 0;
+        talk = true;
+        canattack = false;
+        dialogueCanvas.gameObject.SetActive(true);
+        camoriginalpos = cam.transform.position;
+        camoriginalrot = cam.transform.rotation;
+    }
     public void oldWomanDialogue(GameObject ow)
     {
-        oldwoman = ow;
+        talkingVillager = ow;
         cam.GetComponent<CameraCollision>().enabled = false;
         player.GetComponent<Movement>().setCanMove(false);
         lerp = true;

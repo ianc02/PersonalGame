@@ -98,6 +98,7 @@ public class HealthAndHunger : MonoBehaviour
         }
         if (hunger < 0)
         {
+            changeHealth(-5);
             hunger = 0;
         }
         hungerImage.fillAmount = Mathf.Clamp(hunger / hungerMax, 0, 1f);

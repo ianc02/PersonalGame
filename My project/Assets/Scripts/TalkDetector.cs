@@ -24,10 +24,18 @@ public class TalkDetector : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (Input.GetKeyDown("e"))
+            if (Input.GetKeyDown("e") && !GetComponentInParent<TownsfolkBehavior>().talking)
             {
-                GameManager.Instance.oldWomanDialogue(gameObject);
-                GetComponentInParent<TownsfolkBehavior>().talking = true;
+                if (name == "Merchant")
+                {
+                    GameManager.Instance.merchantDialogue(gameObject);
+                    GetComponentInParent<TownsfolkBehavior>().talking = true;
+                }
+                else if (name == "OldWoman")
+                {
+                    GameManager.Instance.oldWomanDialogue(gameObject);
+                    GetComponentInParent<TownsfolkBehavior>().talking = true;
+                }
             }
             transform.LookAt(GameManager.Instance.getPlayer().transform);
         }
