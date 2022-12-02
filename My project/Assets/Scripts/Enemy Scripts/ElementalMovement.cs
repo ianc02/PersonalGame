@@ -26,7 +26,8 @@ public class ElementalMovement : MonoBehaviour
     private Vector3 oldpos;
     private Vector3 stoppos;
     private int health = 50;
-
+    private int coinmin = 20;
+    private int coinmax = 30;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -139,6 +140,7 @@ public class ElementalMovement : MonoBehaviour
         angry = true;
         if (health <= 0)
         {
+            GameManager.Instance.spawnCoins((int)Mathf.Round(Random.RandomRange(coinmin, coinmax)), transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }

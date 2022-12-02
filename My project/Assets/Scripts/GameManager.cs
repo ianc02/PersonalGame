@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Material sunset;
     public Material fogsky;
     public GameObject signs;
+    public GameObject coinPrefab;
 
 
     private Collider pcollider;
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
         }
         StartCoroutine(fogDensity());
         StartCoroutine(waterCheck());
+        StartCoroutine(coinCheck());
         RaycastHit hit;
         
         for (int i = 0; i < 5001; i++)
@@ -107,258 +109,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public IEnumerator waterCheck()
-    {
-        WaitForSeconds wait = new WaitForSeconds(0.2f);
-        while (true)
-        {
-            int layermask = 1 << 4;
-            yield return wait;
-            RaycastHit hit;
-            if (Physics.Raycast(player.transform.position, Vector3.up, out hit,100f,layermask))
-            {
-                Debug.Log(hit.collider.gameObject.layer); 
-            }
-        }
-    }
-    public IEnumerator SignGone()
-    {
-        reachedEndMaze = true;
-        WaitForSeconds s = new WaitForSeconds(0.1f);
-        reachedEndMaze = true;
-        slowfog = false;
-        StopCoroutine(fogOut());
-        reachedEndMaze = true;
-        slowfog = false;
-        StopCoroutine(fogDensity());
-        reachedEndMaze = true;
-        slowfog = false;
-        Destroy(ctn);
-        reachedEndMaze = true;
-        slowfog = false;
-        Destroy(ctp);
-        reachedEndMaze = true;
-        slowfog = false;
-        StopCoroutine(fogOut());
-        reachedEndMaze = true;
-        slowfog = false;
-        reachedEndMaze = true;
-        StopCoroutine(fogDensity());
-        reachedEndMaze = true;
-        slowfog = false;
-
-        while (RenderSettings.fogDensity > 0.02f)
-        {
-            yield return s;
-            Debug.Log(RenderSettings.fogDensity);
-            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color.a - 0.02f);
-            RenderSettings.fogDensity = RenderSettings.fogDensity - 0.02f;
-            if (RenderSettings.fogDensity > 0.02)
-            {
-                RenderSettings.skybox = fogsky;
-
-
-            }
-            else
-            {
-                RenderSettings.skybox = sunset;
-                
-            }
-        }
-        signs.active = false;
-        RenderSettings.fogDensity = 0;
-        cam.transform.GetChild(0).gameObject.active = false;
-    }
-    public void nodeChanger(GameObject collided)
-    {
-        if (collided.gameObject.name.Equals("ArrowSign (40)"))
-        {
-            slowfog = false;
-            StartCoroutine(SignGone());
-        }
-        if (curNode == null)
-        {
-            if (collided.Equals(signll.First.Value))
-            {
-                curNode = collided;
-                nextNode = signll.Find(curNode).Next.Value;
-                ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Vector3 between2 = new Vector3();
-                between2 = nextNode.transform.position - curNode.transform.position;
-                float dist2 = between2.magnitude;
-                Vector3 scale = ctn.transform.localScale;
-                scale.Set(15f, 15f, dist2+10f);
-                ctn.transform.localScale = scale;
-                ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
-                ctn.transform.LookAt(nextNode.transform.position);
-                ctn.GetComponent<MeshRenderer>().enabled = false;
-                ctn.GetComponent<BoxCollider>().isTrigger = true;
-                ctn.AddComponent<PathwayColliion>();
-                ctn.layer = 8;
-            }
-            
-        }
-        else
-        {
-            
-            if (collided.Equals(signll.Find(curNode).Next.Value) || collided.Equals(signll.Find(curNode).Previous.Value))
-            {
-                prevNode = curNode;
-                curNode = collided;
-                if (ctp != null)
-                {
-                    Destroy(ctp);
-                }
-                ctp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Vector3 between = new Vector3();
-                between = curNode.transform.position - prevNode.transform.position;
-                float dist = between.magnitude;
-                Vector3 scale = ctp.transform.localScale;
-                scale.Set(15f, 15f, dist+10f);
-                ctp.transform.localScale = scale;
-                ctp.transform.position = prevNode.transform.position + (between / 2.0f);
-                ctp.transform.LookAt(curNode.transform.position);
-                ctp.GetComponent<MeshRenderer>().enabled = false;
-                ctp.GetComponent<BoxCollider>().isTrigger = true;
-                ctp.AddComponent<PathwayColliion>();
-                ctp.layer = 8;
-
-                if (signll.Find(curNode).Next !=null)
-                {
-                    nextNode = signll.Find(curNode).Next.Value;
-                    Destroy(ctn);
-                    ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    Vector3 between2 = new Vector3();
-                    between2 = nextNode.transform.position - curNode.transform.position;
-                    float dist2 = between2.magnitude;
-                    Vector3 scale2 = ctn.transform.localScale;
-                    scale2.Set(15f, 15f, dist2+10f);
-                    ctn.transform.localScale = scale2;
-                    ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
-                    ctn.transform.LookAt(nextNode.transform.position);
-                    ctn.GetComponent<MeshRenderer>().enabled = false;
-                    ctn.GetComponent<BoxCollider>().isTrigger = true;
-                    ctn.AddComponent<PathwayColliion>();
-                    ctn.layer = 8;
-                    
-                }
-                
-            }
-        }
-    }
-
-    public void outsidePathway()
-    {
-        bool n = false;
-        bool p = false;
-        if (ctn != null)
-        {
-           
-           if (ctn.GetComponent<PathwayColliion>().inside)
-            {
-                n = true;
-            }
-        }
-        if (ctp != null) 
-        { 
-            if (ctp.GetComponent<PathwayColliion>().inside)
-            {
-                p = true;
-            }
-        }
-        if (!n && !p && !reachedEndMaze)
-        {
-           StartCoroutine(fogOut());
-        }
-    }
-
-    public void inPathway()
-    {
-        StopCoroutine(fogOut());
-        slowfog = true;
-        RenderSettings.skybox = sunset;
-    }
-    public IEnumerator fogOut()
-    {
-        slowfog = false;
-        WaitForSeconds wait = new WaitForSeconds(0.1f);
-        deactivateLantern();
-        
-        while (RenderSettings.fogDensity < 0.98f)
-        {
-            yield return wait;
-            if (!reachedEndMaze)
-            {
-                RenderSettings.fogDensity = RenderSettings.fogDensity + 0.02f;
-            }
-            if (slowfog)
-            {
-                break;
-            }
-        }
-        if (!slowfog)
-        {
-            Vector3 tp = new Vector3();
-            tp.Set(77.6181488f, 97.7436829f, 454.7600f);
-            player.transform.position = tp;
-        }
-        slowfog = true;
-        RenderSettings.skybox = sunset;
-    }
-    private IEnumerator fogDensity()
-    {
-        WaitForSeconds wait = new WaitForSeconds(0.05f);
-        while (!reachedEndMaze)
-        {
-            yield return wait;
-            while (slowfog)
-            {
-                yield return wait;
-                if (!reachedEndMaze)
-                {
-                    if (player.transform.position.z < 400)
-                    {
-                        if (player.transform.position.x < 400)
-                        {
-
-                            //signs.active = true;
-                            cam.transform.GetChild(0).gameObject.active = true;
-                            float density = Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 3) * fogDens), fogDens);
-
-                            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)), 1));
-                            if (!reachedEndMaze)
-                            {
-                                RenderSettings.fogDensity = density;
-                            }
-                            if (density > 0.1)
-                            {
-                                RenderSettings.skybox = fogsky;
-
-
-                            }
-                            else
-                            {
-                                RenderSettings.skybox = sunset;
-
-                            }
-                        }
-                        else
-                        {
-                            //signs.active = false;
-                            RenderSettings.fogDensity = 0;
-                            cam.transform.GetChild(0).gameObject.active = false;
-                        }
-                    }
-                    else
-                    {
-                        //signs.active = false;
-                        RenderSettings.fogDensity = 0;
-                        cam.transform.GetChild(0).gameObject.active = false;
-                    }
-                }
-            }
-        }
-    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -459,6 +210,35 @@ public class GameManager : MonoBehaviour
 
         
 
+    }
+
+    public IEnumerator waterCheck()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.2f);
+        while (true)
+        {
+            int layermask = 1 << 4;
+            yield return wait;
+            RaycastHit hit;
+            if (Physics.Raycast(player.transform.position, Vector3.up, out hit, 100f, layermask))
+            {
+                Debug.Log(hit.collider.gameObject.layer);
+            }
+        }
+    }
+
+    public IEnumerator coinCheck()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.2f);
+        while (true)
+        {
+            Collider[] rangeChecks = Physics.OverlapSphere(player.transform.position, 2, 9);
+            foreach(Collider coin in rangeChecks)
+            {
+                addToInventory("Collectable", "coin");
+                Destroy(coin.gameObject);
+            }
+        }
     }
 
     public GameObject getPlayer()
@@ -603,5 +383,270 @@ public class GameManager : MonoBehaviour
         return hit;
     }
 
+    public void spawnCoins(int amount, Vector3 pos, Quaternion rot)
+    {
+        for (int i = 0; i < amount; i++) {
+            float randposx = randomNumber(-1, 1);
+            float randposz = randomNumber(-1, 1);
+            float randrotz = randomNumber(0, 360);
+            float randrotx = randomNumber(0, 360);
+            float randroty = randomNumber(0, 360);
+            Vector3 newpos = new Vector3(pos.x + randposx, pos.y + 1, pos.z + randposz);
+            Quaternion newrot = Quaternion.Euler(rot.x + randrotx, rot.y + randroty, randrotz + rot.z);
+            Instantiate(coinPrefab, newpos, newrot);
+        }
+    }
+
+
+    public float randomNumber(float min, float max)
+    {
+        return Random.RandomRange(min, max);
+    }
+
+
+
+
+
+
+    // FOG STUFF BELOW
     
+    public IEnumerator SignGone()
+    {
+        reachedEndMaze = true;
+        WaitForSeconds s = new WaitForSeconds(0.1f);
+        reachedEndMaze = true;
+        slowfog = false;
+        StopCoroutine(fogOut());
+        reachedEndMaze = true;
+        slowfog = false;
+        StopCoroutine(fogDensity());
+        reachedEndMaze = true;
+        slowfog = false;
+        Destroy(ctn);
+        reachedEndMaze = true;
+        slowfog = false;
+        Destroy(ctp);
+        reachedEndMaze = true;
+        slowfog = false;
+        StopCoroutine(fogOut());
+        reachedEndMaze = true;
+        slowfog = false;
+        reachedEndMaze = true;
+        StopCoroutine(fogDensity());
+        reachedEndMaze = true;
+        slowfog = false;
+
+        while (RenderSettings.fogDensity > 0.02f)
+        {
+            yield return s;
+            Debug.Log(RenderSettings.fogDensity);
+            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color.a - 0.02f);
+            RenderSettings.fogDensity = RenderSettings.fogDensity - 0.02f;
+            if (RenderSettings.fogDensity > 0.02)
+            {
+                RenderSettings.skybox = fogsky;
+
+
+            }
+            else
+            {
+                RenderSettings.skybox = sunset;
+
+            }
+        }
+        signs.active = false;
+        RenderSettings.fogDensity = 0;
+        cam.transform.GetChild(0).gameObject.active = false;
+    }
+    public void nodeChanger(GameObject collided)
+    {
+        if (collided.gameObject.name.Equals("ArrowSign (40)"))
+        {
+            slowfog = false;
+            StartCoroutine(SignGone());
+        }
+        if (curNode == null)
+        {
+            if (collided.Equals(signll.First.Value))
+            {
+                curNode = collided;
+                nextNode = signll.Find(curNode).Next.Value;
+                ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Vector3 between2 = new Vector3();
+                between2 = nextNode.transform.position - curNode.transform.position;
+                float dist2 = between2.magnitude;
+                Vector3 scale = ctn.transform.localScale;
+                scale.Set(15f, 15f, dist2 + 10f);
+                ctn.transform.localScale = scale;
+                ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+                ctn.transform.LookAt(nextNode.transform.position);
+                ctn.GetComponent<MeshRenderer>().enabled = false;
+                ctn.GetComponent<BoxCollider>().isTrigger = true;
+                ctn.AddComponent<PathwayColliion>();
+                ctn.layer = 8;
+            }
+
+        }
+        else
+        {
+
+            if (collided.Equals(signll.Find(curNode).Next.Value) || collided.Equals(signll.Find(curNode).Previous.Value))
+            {
+                prevNode = curNode;
+                curNode = collided;
+                if (ctp != null)
+                {
+                    Destroy(ctp);
+                }
+                ctp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Vector3 between = new Vector3();
+                between = curNode.transform.position - prevNode.transform.position;
+                float dist = between.magnitude;
+                Vector3 scale = ctp.transform.localScale;
+                scale.Set(15f, 15f, dist + 10f);
+                ctp.transform.localScale = scale;
+                ctp.transform.position = prevNode.transform.position + (between / 2.0f);
+                ctp.transform.LookAt(curNode.transform.position);
+                ctp.GetComponent<MeshRenderer>().enabled = false;
+                ctp.GetComponent<BoxCollider>().isTrigger = true;
+                ctp.AddComponent<PathwayColliion>();
+                ctp.layer = 8;
+
+                if (signll.Find(curNode).Next != null)
+                {
+                    nextNode = signll.Find(curNode).Next.Value;
+                    Destroy(ctn);
+                    ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    Vector3 between2 = new Vector3();
+                    between2 = nextNode.transform.position - curNode.transform.position;
+                    float dist2 = between2.magnitude;
+                    Vector3 scale2 = ctn.transform.localScale;
+                    scale2.Set(15f, 15f, dist2 + 10f);
+                    ctn.transform.localScale = scale2;
+                    ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+                    ctn.transform.LookAt(nextNode.transform.position);
+                    ctn.GetComponent<MeshRenderer>().enabled = false;
+                    ctn.GetComponent<BoxCollider>().isTrigger = true;
+                    ctn.AddComponent<PathwayColliion>();
+                    ctn.layer = 8;
+
+                }
+
+            }
+        }
+    }
+
+    public void outsidePathway()
+    {
+        bool n = false;
+        bool p = false;
+        if (ctn != null)
+        {
+
+            if (ctn.GetComponent<PathwayColliion>().inside)
+            {
+                n = true;
+            }
+        }
+        if (ctp != null)
+        {
+            if (ctp.GetComponent<PathwayColliion>().inside)
+            {
+                p = true;
+            }
+        }
+        if (!n && !p && !reachedEndMaze)
+        {
+            StartCoroutine(fogOut());
+        }
+    }
+
+    public void inPathway()
+    {
+        StopCoroutine(fogOut());
+        slowfog = true;
+        RenderSettings.skybox = sunset;
+    }
+    public IEnumerator fogOut()
+    {
+        slowfog = false;
+        WaitForSeconds wait = new WaitForSeconds(0.1f);
+        deactivateLantern();
+
+        while (RenderSettings.fogDensity < 0.98f)
+        {
+            yield return wait;
+            if (!reachedEndMaze)
+            {
+                RenderSettings.fogDensity = RenderSettings.fogDensity + 0.02f;
+            }
+            if (slowfog)
+            {
+                break;
+            }
+        }
+        if (!slowfog)
+        {
+            Vector3 tp = new Vector3();
+            tp.Set(77.6181488f, 97.7436829f, 454.7600f);
+            player.transform.position = tp;
+        }
+        slowfog = true;
+        RenderSettings.skybox = sunset;
+    }
+    private IEnumerator fogDensity()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.05f);
+        while (!reachedEndMaze)
+        {
+            yield return wait;
+            while (slowfog)
+            {
+                yield return wait;
+                if (!reachedEndMaze)
+                {
+                    if (player.transform.position.z < 400)
+                    {
+                        if (player.transform.position.x < 400)
+                        {
+
+                            //signs.active = true;
+                            cam.transform.GetChild(0).gameObject.active = true;
+                            float density = Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 3) * fogDens), fogDens);
+
+                            cam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, Mathf.Min((Mathf.Pow(((50 - (Mathf.Max(player.transform.position.x, player.transform.position.z) - 350)) / 50f), 2)), 1));
+                            if (!reachedEndMaze)
+                            {
+                                RenderSettings.fogDensity = density;
+                            }
+                            if (density > 0.1)
+                            {
+                                RenderSettings.skybox = fogsky;
+
+
+                            }
+                            else
+                            {
+                                RenderSettings.skybox = sunset;
+
+                            }
+                        }
+                        else
+                        {
+                            //signs.active = false;
+                            RenderSettings.fogDensity = 0;
+                            cam.transform.GetChild(0).gameObject.active = false;
+                        }
+                    }
+                    else
+                    {
+                        //signs.active = false;
+                        RenderSettings.fogDensity = 0;
+                        cam.transform.GetChild(0).gameObject.active = false;
+                    }
+                }
+            }
+        }
+    }
+
 }

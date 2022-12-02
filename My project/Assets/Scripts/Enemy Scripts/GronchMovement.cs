@@ -21,6 +21,8 @@ public class GronchMovement : MonoBehaviour
     private int health = 20;
     private bool attacking;
     public int distance;
+    private int coinmin = 3;
+    private int coinmax = 7;
     // Start is called before the first frame update
     void Start()
     {
@@ -144,6 +146,7 @@ public class GronchMovement : MonoBehaviour
         alertHomies();
         if (health <= 0)
         {
+            GameManager.Instance.spawnCoins((int)Mathf.Round(Random.RandomRange(coinmin, coinmax)), transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }

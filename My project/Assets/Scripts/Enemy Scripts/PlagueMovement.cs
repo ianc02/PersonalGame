@@ -33,6 +33,8 @@ public class PlagueMovement : MonoBehaviour
     private ParticleSystem particle;
     private Vector3 particleOriPos;
     public float spd;
+    private int coinmin = 3;
+    private int coinmax = 7;
 
     void Start()
     {
@@ -204,6 +206,7 @@ public class PlagueMovement : MonoBehaviour
         angry = true;
         if (health <= 0)
         {
+            GameManager.Instance.spawnCoins((int)Mathf.Round(Random.RandomRange(coinmin, coinmax)), transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }

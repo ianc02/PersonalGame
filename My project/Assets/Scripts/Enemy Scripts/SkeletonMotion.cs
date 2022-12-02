@@ -27,6 +27,8 @@ public class SkeletonMotion : MonoBehaviour
     private Vector3 stoppos;
     private Vector3 oripos;
     public int health = 20;
+    private int coinmin = 1;
+    private int coinmax = 5;
 
     void Start()
     {
@@ -161,6 +163,7 @@ public class SkeletonMotion : MonoBehaviour
         angry = true;
         if (health <= 0)
         {
+            GameManager.Instance.spawnCoins((int)Mathf.Round(Random.RandomRange(coinmin, coinmax)), transform.position, transform.rotation);
             Destroy(gameObject);
         }
     }
