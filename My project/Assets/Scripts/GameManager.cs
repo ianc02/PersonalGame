@@ -217,6 +217,7 @@ public class GameManager : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(0.2f);
         while (true)
         {
+            
             int layermask = 1 << 4;
             yield return wait;
             RaycastHit hit;
@@ -232,11 +233,12 @@ public class GameManager : MonoBehaviour
         WaitForSeconds wait = new WaitForSeconds(0.2f);
         while (true)
         {
+            yield return wait;
             Collider[] rangeChecks = Physics.OverlapSphere(player.transform.position, 2, 9);
             foreach(Collider coin in rangeChecks)
             {
                 addToInventory("Collectable", "coin");
-                Destroy(coin.gameObject);
+                //Destroy(coin.gameObject);
             }
         }
     }
