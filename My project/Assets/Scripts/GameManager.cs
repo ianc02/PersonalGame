@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Audio;
 using UnityEditor;
 
@@ -15,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Canvas inventory;
     public Canvas pauseMenu;
     public Canvas shopCanvas;
+    public GameObject postProcessing;
     public GameObject player;
     public GameObject camtalk;
     public Camera cam;
@@ -25,13 +28,16 @@ public class GameManager : MonoBehaviour
     public Canvas dialogueCanvas;
     public GameObject lantern;
     public GameObject snorkel;
+    public GameObject lensOfTruth;
     public float fogDens;
     public Material sunset;
     public Material fogsky;
     public GameObject signs;
     public GameObject coinPrefab;
-    public GameObject coinsInWallet;
+    public GameObject coinsInStoreText;
+    public GameObject coinsInInvText;
     public int coinCount = 0;
+
 
 
     private Collider pcollider;
@@ -46,6 +52,7 @@ public class GameManager : MonoBehaviour
     private Quaternion camoriginalrot;
     private bool usensorkel = false;
     private bool hasLantern = true;
+    private bool hasLensOfTruth = true;
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
@@ -55,6 +62,8 @@ public class GameManager : MonoBehaviour
     private bool slowfog = true;
     private bool reachedEndMaze=false;
     private GameObject talkingVillager;
+    private Volume volume;
+    private ColorAdjustments ca;
 
     private void Awake()
     {
@@ -70,6 +79,8 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        volume = postProcessing.GetComponent<Volume>();
+        volume.profile.TryGet<ColorAdjustments>(out ca);
         progress = 0;
         lerp = false;
         dialogue = new ArrayList();
@@ -130,7 +141,27 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    activateLantern();
+                    if (!lensOfTruth.active)
+                    {
+                        activateLantern();
+                    }
+                }
+            }
+        }
+        if (hasLensOfTruth)
+        {
+            if (Input.GetKeyDown("t"))
+            {
+                if (lensOfTruth.active)
+                {
+                    deactivateLensOfTruth();
+                }
+                else
+                {
+                    if (!lantern.active)
+                    {
+                        activateLensOfTruth();
+                    }
                 }
             }
         }
@@ -178,6 +209,7 @@ public class GameManager : MonoBehaviour
                 {
                     cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
                     cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
+                    player.GetComponent<Movement>().setCanMove(false);
                     if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
                     {
                         lerp = false;
@@ -208,7 +240,8 @@ public class GameManager : MonoBehaviour
             {
                 if (talkingVillager.name.Equals("Merchant")){
                     shopCanvas.gameObject.active = true;
-                    coinsInWallet.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                    coinsInStoreText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                    coinsInInvText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
                     pauseGame();
                 }
                 dialogueCanvas.gameObject.SetActive(false);
@@ -234,7 +267,21 @@ public class GameManager : MonoBehaviour
         {
             coinCount -= cost;
             addToInventory(selection.tag, selection.name);
-            coinsInWallet.GetComponent<TextMeshProUGUI>().SetText(coinCount.ToString());
+            Debug.Log(selection.tag);
+            Debug.Log(selection.name);
+            coinsInStoreText.GetComponent<TextMeshProUGUI>().SetText(coinCount.ToString());
+            coinsInInvText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+            if (selection.name.Equals("bow") || selection.name.Equals("quiver") || selection.name.Equals("shield"))
+            {
+                selection.GetComponent<Button>().enabled = false;
+                Image[] images = selection.GetComponentsInChildren<Image>();
+                foreach(Image i in images)
+                {
+                    i.color = new Color(1f, 1f, 1f, 0.5f);
+                }
+                selection.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+                selection.GetComponentInChildren<TextMeshProUGUI>().enabled = false;
+            }
         }
     }
 
@@ -310,16 +357,32 @@ public class GameManager : MonoBehaviour
                 {
                     if (grandchild.name == objectname)
                     {
-                        GameObject t = grandchild.gameObject;
-                        TextMeshProUGUI r = t.GetComponentInChildren<TextMeshProUGUI>();
-                        string e = r.text;
-                        int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
-                        num += 1;
-                        if (objectname.Equals("coin"))
+                        GameObject itemgo = grandchild.gameObject;
+                        if (objectTag.Equals("WeaponsAndArmor"))
                         {
-                            coinCount = num;
+                            Debug.Log("mmeep");
+                            grandchild.GetChild(0).gameObject.active = true;
                         }
-                        grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
+                        else
+                        {
+                            TextMeshProUGUI text = itemgo.GetComponentInChildren<TextMeshProUGUI>();
+                            string e = text.text;
+                            int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
+                            num += 1;
+                            if (objectname.Equals("coin"))
+                            {
+                                coinCount = num;
+                            }
+                            if (objectname.Equals("arrows"))
+                            {
+                                num += 2;
+                                if (num > 10)
+                                {
+                                    num = 10;
+                                }
+                            }
+                            grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
+                        }
                     }
                 }
             }
@@ -390,6 +453,29 @@ public class GameManager : MonoBehaviour
     public void deactivateLantern()
     {
         lantern.active = false;
+        
+    }
+    public void activateLensOfTruth()
+    {
+        hasLensOfTruth = true;
+        lensOfTruth.active = true;
+        ca.colorFilter.value = new Color(1f, 0.6f, 0.6f, 1f);
+        foreach (Transform child in signs.transform)
+        {
+            child.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            child.GetChild(0).gameObject.active = true;
+        }
+
+    }
+    public void deactivateLensOfTruth()
+    {
+        lensOfTruth.active = false;
+        ca.colorFilter.value = new Color(1f, 1f, 1f, 1f);
+        foreach (Transform child in signs.transform)
+        {
+            child.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            child.GetChild(0).gameObject.active = false;
+        }
     }
 
     public void canusesnorkel()
