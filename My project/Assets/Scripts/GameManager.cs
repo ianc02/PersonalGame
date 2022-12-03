@@ -360,7 +360,10 @@ public class GameManager : MonoBehaviour
                         GameObject itemgo = grandchild.gameObject;
                         if (objectTag.Equals("WeaponsAndArmor"))
                         {
-                            Debug.Log("mmeep");
+                            grandchild.GetChild(0).gameObject.active = true;
+                        }
+                        else if (objectTag.Equals("Special"))
+                        {
                             grandchild.GetChild(0).gameObject.active = true;
                         }
                         else

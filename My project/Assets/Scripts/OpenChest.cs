@@ -73,8 +73,12 @@ public class OpenChest : MonoBehaviour
         {
             if (Input.GetKey("e"))
             {
+                Debug.Log(tool.tag);
+                Debug.Log(tool.name);
+                GameManager.Instance.addToInventory(tool.tag, tool.name);
                 if (tool.name.Equals("lantern"))
                 {
+                    
                     Destroy(tool);
                     GameManager.Instance.activateLantern();
                     GameManager.Instance.addProgress();

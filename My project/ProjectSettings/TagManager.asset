@@ -17,6 +17,7 @@ TagManager:
   - plum
   - water
   - WeaponsAndArmor
+  - Special
   layers:
   - Default
   - TransparentFX
