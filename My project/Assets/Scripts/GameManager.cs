@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public Canvas inventory;
     public Canvas pauseMenu;
     public Canvas shopCanvas;
+    public Canvas statusCanvas;
     public GameObject postProcessing;
     public GameObject player;
     public GameObject camtalk;
@@ -37,6 +38,10 @@ public class GameManager : MonoBehaviour
     public GameObject coinsInStoreText;
     public GameObject coinsInInvText;
     public int coinCount = 0;
+    public GameObject sword;
+    public GameObject axe;
+    public GameObject bow;
+    public GameObject currentWeapon;
 
 
 
@@ -127,7 +132,30 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown("1"))
+        {
+            currentWeapon = sword;
+            sword.active = true;
+            axe.active = false;
+            bow.active = false;
+
+        }
+        if (Input.GetKeyDown("2"))
+        {
+            currentWeapon = bow;
+            sword.active = false;
+            axe.active = false;
+            bow.active = true;
+
+        }
+        if (Input.GetKeyDown("3"))
+        {
+            currentWeapon = axe;
+            sword.active = false;
+            axe.active = true;
+            bow.active = false;
+
+        }
         if (Input.GetKeyDown("e"))
         {
             terrain.GetComponent<TreeCollsionDetector>().checkTrees();
@@ -782,6 +810,16 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    public void showCross()
+    {
+        statusCanvas.gameObject.transform.GetChild(4).gameObject.active = true;
+    }
+    public void hideCross()
+    {
+        statusCanvas.gameObject.transform.GetChild(4).gameObject.active = false;
     }
 
 }
