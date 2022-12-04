@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public Canvas pauseMenu;
     public Canvas shopCanvas;
     public Canvas statusCanvas;
+    public Canvas waterlevelCanvas;
     public GameObject postProcessing;
     public GameObject player;
     public GameObject camtalk;
