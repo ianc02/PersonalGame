@@ -9,6 +9,7 @@ public class WaterKeys : MonoBehaviour
     public GameObject topWater;
     public GameObject bottomWater;
     public GameObject currentPillar;
+    public float speed;
 
     public bool p3;
     public bool p1;
@@ -24,8 +25,9 @@ public class WaterKeys : MonoBehaviour
     {
         if (lerp)
         {
-            topWater.transform.localPosition = Vector3.Lerp(topWater.transform.localPosition, new Vector3(topWater.transform.localPosition.x, (-0.6f + (dist * 2f)), topWater.transform.localPosition.z), Time.deltaTime );
-            bottomWater.transform.localPosition = Vector3.Lerp(bottomWater.transform.localPosition, new Vector3(bottomWater.transform.localPosition.x, (-0.6f + (dist * 2f)), bottomWater.transform.localPosition.z), Time.deltaTime );
+            topWater.transform.localPosition = Vector3.MoveTowards(topWater.transform.localPosition, new Vector3(topWater.transform.localPosition.x, (-0.6f + (dist * 2f)), topWater.transform.localPosition.z), Time.deltaTime *speed);
+            bottomWater.transform.localPosition = Vector3.MoveTowards(bottomWater.transform.localPosition, new Vector3(bottomWater.transform.localPosition.x, (-0.6f + (dist * 2f)), bottomWater.transform.localPosition.z), Time.deltaTime *speed);
+            
             if (Vector3.Distance(topWater.transform.localPosition, new Vector3(topWater.transform.localPosition.x, (-0.6f + (dist * 2f)))) < 0.01)
             {
                 lerp = false;
@@ -38,15 +40,13 @@ public class WaterKeys : MonoBehaviour
     {
         GameObject selected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
         GameManager.Instance.resumeGame();
-        if (keyShape.Equals(currentPillar.gameObject.GetComponent<pillarCollisionDetection>().keyShape))
+        if (keyShape.Equals(currentPillar.gameObject.GetComponent<pillarCollisionDetection>().keyShape) && selected.gameObject.transform.GetChild(0).gameObject.active)
         {
             currentPillar.transform.GetChild(0).gameObject.active = true;
             currentPillar.transform.GetChild(0).gameObject.name = selected.name;
             
             loseKey(selected.name);
             selected.transform.GetChild(0).gameObject.active = false;
-            calcDist();
-            lerp = true;
 
         }
         GameManager.Instance.waterlevelCanvas.gameObject.active = false;
@@ -71,6 +71,7 @@ public class WaterKeys : MonoBehaviour
         {
             dist += 6;
         }
+        lerp = true;
     }
     public void getKey(string n)
     {
@@ -90,6 +91,7 @@ public class WaterKeys : MonoBehaviour
         {
             p6 = false;
         }
+        calcDist();
     }
     public void loseKey(string n)
     {
@@ -109,5 +111,6 @@ public class WaterKeys : MonoBehaviour
         {
             p6 = true;
         }
+        calcDist();
     }
 }

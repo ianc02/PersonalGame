@@ -326,7 +326,11 @@ public class GameManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(player.transform.position, Vector3.up, out hit, 1000f, layermask))
             {
-                Debug.Log(hit.collider.gameObject.layer);
+                player.GetComponent<Movement>().isSwimming = true;
+            }
+            else
+            {
+                player.GetComponent<Movement>().isSwimming = false;
             }
         }
     }
@@ -380,43 +384,58 @@ public class GameManager : MonoBehaviour
     public void addToInventory(string objectTag, string objectname)
     {
 
-        
-        foreach (Transform child in inventory.transform)
+        if (objectTag.Equals("key"))
         {
-            if (child.name == objectTag)
+            Debug.Log("why nt");
+            foreach (Transform child in waterlevelCanvas.transform.GetChild(1))
             {
-                foreach(Transform grandchild in child)
+                Debug.Log(child.name);
+                if (child.name.Equals(objectname))
                 {
-                    if (grandchild.name == objectname)
+                    Debug.Log("reaches");
+                    child.transform.GetChild(0).gameObject.active = true;
+                }
+            }
+        }
+        else
+        {
+            foreach (Transform child in inventory.transform)
+            {
+                if (child.name == objectTag)
+                {
+                    foreach (Transform grandchild in child)
                     {
-                        GameObject itemgo = grandchild.gameObject;
-                        if (objectTag.Equals("WeaponsAndArmor"))
+                        if (grandchild.name == objectname)
                         {
-                            grandchild.GetChild(0).gameObject.active = true;
-                        }
-                        else if (objectTag.Equals("Special"))
-                        {
-                            grandchild.GetChild(0).gameObject.active = true;
-                        }
-                        else
-                        {
-                            TextMeshProUGUI text = itemgo.GetComponentInChildren<TextMeshProUGUI>();
-                            string e = text.text;
-                            int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
-                            num += 1;
-                            if (objectname.Equals("coin"))
+                            GameObject itemgo = grandchild.gameObject;
+                            if (objectTag.Equals("WeaponsAndArmor"))
                             {
-                                coinCount = num;
+                                grandchild.GetChild(0).gameObject.active = true;
                             }
-                            if (objectname.Equals("arrows"))
+                            else if (objectTag.Equals("Special"))
                             {
-                                num += 2;
-                                if (num > 10)
+                                grandchild.GetChild(0).gameObject.active = true;
+                            }
+                            else
+                            {
+                                TextMeshProUGUI text = itemgo.GetComponentInChildren<TextMeshProUGUI>();
+                                string e = text.text;
+                                int num = int.Parse(grandchild.gameObject.GetComponentInChildren<TextMeshProUGUI>().text);
+                                num += 1;
+                                if (objectname.Equals("coin"))
                                 {
-                                    num = 10;
+                                    coinCount = num;
                                 }
+                                if (objectname.Equals("arrows"))
+                                {
+                                    num += 2;
+                                    if (num > 10)
+                                    {
+                                        num = 10;
+                                    }
+                                }
+                                grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                             }
-                            grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                         }
                     }
                 }

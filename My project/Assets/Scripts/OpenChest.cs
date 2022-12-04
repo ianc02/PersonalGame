@@ -76,22 +76,21 @@ public class OpenChest : MonoBehaviour
                 Debug.Log(tool.tag);
                 Debug.Log(tool.name);
                 GameManager.Instance.addToInventory(tool.tag, tool.name);
+                Destroy(tool);
                 if (tool.name.Equals("lantern"))
                 {
                     
-                    Destroy(tool);
                     GameManager.Instance.activateLantern();
                     GameManager.Instance.addProgress();
                 }
                 if (tool.name.Equals("snorkel"))
                 {
-                    Destroy(tool);
                     GameManager.Instance.canusesnorkel();
                     GameManager.Instance.addProgress();
                 }
                 if (tool.name.Equals("lensOfTruth"))
                 {
-                    Destroy(tool);
+                    
                     GameManager.Instance.activateLensOfTruth();
                     GameManager.Instance.addProgress();
                 }

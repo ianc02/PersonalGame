@@ -18,6 +18,7 @@ TagManager:
   - water
   - WeaponsAndArmor
   - Special
+  - key
   layers:
   - Default
   - TransparentFX
