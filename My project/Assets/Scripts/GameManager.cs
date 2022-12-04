@@ -85,6 +85,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        currentWeapon = sword;
         volume = postProcessing.GetComponent<Volume>();
         volume.profile.TryGet<ColorAdjustments>(out ca);
         progress = 0;
@@ -323,7 +324,7 @@ public class GameManager : MonoBehaviour
             int layermask = 1 << 4;
             yield return wait;
             RaycastHit hit;
-            if (Physics.Raycast(player.transform.position, Vector3.up, out hit, 100f, layermask))
+            if (Physics.Raycast(player.transform.position, Vector3.up, out hit, 1000f, layermask))
             {
                 Debug.Log(hit.collider.gameObject.layer);
             }
@@ -355,6 +356,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         player.GetComponent<Movement>().setCanMove(false);
+        canattack = false;
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
     }
@@ -362,6 +364,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         player.GetComponent<Movement>().setCanMove(true);
+        canattack = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

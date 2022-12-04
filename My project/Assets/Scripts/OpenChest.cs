@@ -89,6 +89,12 @@ public class OpenChest : MonoBehaviour
                     GameManager.Instance.canusesnorkel();
                     GameManager.Instance.addProgress();
                 }
+                if (tool.name.Equals("lensOfTruth"))
+                {
+                    Destroy(tool);
+                    GameManager.Instance.activateLensOfTruth();
+                    GameManager.Instance.addProgress();
+                }
             }
         }
     }
