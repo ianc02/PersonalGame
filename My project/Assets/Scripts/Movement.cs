@@ -18,6 +18,7 @@ public class Movement : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed;
     public float lookXLimit;
+    public float lookXLimitwater;
     public float xMin;
     public float xMax;
     public float zMin;
@@ -29,6 +30,7 @@ public class Movement : MonoBehaviour
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
     float rotationX = 0;
+    float rotationY = 0;
 
     [HideInInspector] 
     public bool canMove = true;
@@ -52,6 +54,10 @@ public class Movement : MonoBehaviour
     {
         if (!isSwimming)
         {
+            if (transform.rotation.x != 0)
+            {
+                transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
+            }
             // We are grounded, so recalculate move direction based on axes
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 right = transform.TransformDirection(Vector3.right);
@@ -111,7 +117,7 @@ public class Movement : MonoBehaviour
         }
         else
         {
-
+            moveDirection = Vector3.zero;
             if (Input.GetKey("w"))
             {
                 moveDirection = (Camera.main.transform.forward * swimspeed) + (Camera.main.transform.up / upmitigator) ;
@@ -126,9 +132,17 @@ public class Movement : MonoBehaviour
             {
 
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-                rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-                playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+                rotationX = Mathf.Clamp(rotationX, -lookXLimitwater, lookXLimitwater);
+                rotationY += Input.GetAxis("Mouse X") * lookSpeed;
+                //rotationY = Mathf.Clamp(rotationY, -360, 360);
+                playerCamera.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                //float xrot = Mathf.Clamp(Input.GetAxis("Mouse X"), -70, 70);
+                
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+                transform.rotation = Quaternion.Euler(rotationX, rotationY, transform.rotation.z);
+
+
+
                 if (!Input.GetKey("w"))
                 {
                     body.transform.localRotation = Quaternion.Euler(0, 0, 0);

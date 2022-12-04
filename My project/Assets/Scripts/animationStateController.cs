@@ -21,6 +21,7 @@ public class animationStateController : MonoBehaviour
     private GameObject player;
     private Camera cam;
     private Vector3 camOriPos;
+    private Vector3 camSwimPos;
     private Vector3 camBowPos;
     private Vector3 arrowOriPos;
     private Quaternion arrowOriRot;
@@ -34,6 +35,7 @@ public class animationStateController : MonoBehaviour
         player = transform.parent.gameObject;
         cam = Camera.main;
         camOriPos = new Vector3(0f, 4f, -6f);
+        camSwimPos = new Vector3(0f, 0f, -6f);
         camBowPos = new Vector3(0.0700000003f, 1.19000006f, -0.469999999f);
         arrowOriRot = new Quaternion(-0.152426913f, -0.612612665f, 0.752381146f, 0.188134149f);
         arrowOriPos = new Vector3(-0.0561383814f, -0.0512951128f, 0.0538773574f);
@@ -120,9 +122,19 @@ public class animationStateController : MonoBehaviour
         }
         else
         {
-            if (Vector3.Distance(cam.transform.localPosition, camOriPos) > 0.01f)
+            if (!player.GetComponent<Movement>().isSwimming)
             {
-                cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camOriPos, Time.deltaTime * 3f);
+                if (Vector3.Distance(cam.transform.localPosition, camOriPos) > 0.01f)
+                {
+                    cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camOriPos, Time.deltaTime * 3f);
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(cam.transform.localPosition, camSwimPos) > 0.01f)
+                {
+                    cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camSwimPos, Time.deltaTime * 3f);
+                }
             }
         }
         if (canAttack)

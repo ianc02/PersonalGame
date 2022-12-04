@@ -71,7 +71,7 @@ public class OpenChest : MonoBehaviour
         }
         if (open && tool!=null)
         {
-            if (Input.GetKey("e"))
+            if (Input.GetKey("e") )
             {
                 Debug.Log(tool.tag);
                 Debug.Log(tool.name);
@@ -112,7 +112,7 @@ public class OpenChest : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (Input.GetKey("e"))
+            if (Input.GetKey("e") && !GameManager.Instance.getPlayer().GetComponent<Movement>().isSwimming)
             {
 
                 lerp = true;
