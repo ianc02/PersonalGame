@@ -17,9 +17,12 @@ public class WaterKeys : MonoBehaviour
     public bool p6;
     public bool lerp;
     public float dist;
+    public bool playerFollow;
+    private GameObject player;
     private void Start()
     {
         waterc = GameManager.Instance.waterlevelCanvas;
+        player = GameManager.Instance.getPlayer();
     }
     private void Update()
     {
@@ -27,7 +30,10 @@ public class WaterKeys : MonoBehaviour
         {
             topWater.transform.localPosition = Vector3.MoveTowards(topWater.transform.localPosition, new Vector3(topWater.transform.localPosition.x, (-0.6f + (dist * 2f)), topWater.transform.localPosition.z), Time.deltaTime *speed);
             bottomWater.transform.localPosition = Vector3.MoveTowards(bottomWater.transform.localPosition, new Vector3(bottomWater.transform.localPosition.x, (-0.6f + (dist * 2f)), bottomWater.transform.localPosition.z), Time.deltaTime *speed);
-            
+            if (playerFollow)
+            {
+                player.transform.position = new Vector3(player.transform.position.x, topWater.transform.position.y, player.transform.position.z);
+            }
             if (Vector3.Distance(topWater.transform.localPosition, new Vector3(topWater.transform.localPosition.x, (-0.6f + (dist * 2f)))) < 0.01)
             {
                 lerp = false;

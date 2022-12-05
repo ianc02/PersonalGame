@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public GameObject lantern;
     public GameObject snorkel;
     public GameObject lensOfTruth;
+    public GameObject waterLevel;
 
     public float fogDens;
     public Material sunset;
@@ -61,10 +62,10 @@ public class GameManager : MonoBehaviour
     private bool canattack = true;
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
-    private bool usesnorkel = false;
-    private bool hasLantern = false;
-    private bool hasLensOfTruth = false;
-    public bool hasMedallion = false;
+    private bool usesnorkel = true;
+    private bool hasLantern = true;
+    private bool hasLensOfTruth = true;
+    public bool hasMedallion = true;
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
@@ -158,6 +159,8 @@ public class GameManager : MonoBehaviour
             axe.active = false;
             bow.active = true;
             arrow.active = true;
+            lantern.active = false;
+            lensOfTruth.active = false;
 
         }
         if (Input.GetKeyDown("3"))
@@ -340,13 +343,16 @@ public class GameManager : MonoBehaviour
                 player.GetComponent<Movement>().isSwimming = true;
                 if (!lensOfTruth.active) { ca.colorFilter.value = new Color(.6f, 0.6f, 1f, 1f); }
                 if (!usesnorkel) { player.GetComponent<HealthAndHunger>().changeHealth(-0.4f); }
+                else { snorkel.active = true; }
+                
                 
             }
             else
             {
-                if (player.GetComponent<Movement>().isSwimming) { ca.colorFilter.value = new Color(1f, 1f, 1f, 1f); }
+                if (player.GetComponent<Movement>().isSwimming && !lensOfTruth.active) { ca.colorFilter.value = new Color(1f, 1f, 1f, 1f); }
                 player.GetComponent<Movement>().isSwimming = false;
-                
+                snorkel.active = false;
+
             }
         }
     }

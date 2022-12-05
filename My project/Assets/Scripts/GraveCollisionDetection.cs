@@ -21,11 +21,11 @@ public class GraveCollisionDetection : MonoBehaviour
                     {
                         Debug.Log("ADD MORE SHIT HERE BUT THIS IS THE END FOR NOW");
                     }
-                    //else
-                    //{
-                    //    GameObject skeleton = Instantiate(skelly);
-                    //    skeleton.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 5);
-                    //}
+                    else
+                    {
+                        GameObject skeleton = Instantiate(skelly);
+                        skeleton.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 5);
+                    }
                 }
             }
         }

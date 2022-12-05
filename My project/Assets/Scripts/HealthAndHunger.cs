@@ -120,4 +120,17 @@ public class HealthAndHunger : MonoBehaviour
         }
         
     }
+
+    public void usePotion()
+    {
+        TextMeshProUGUI t = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponentInChildren<TextMeshProUGUI>();
+        string e = t.text;
+        int num = int.Parse(e);
+        if (num > 0)
+        {
+            num -= 1;
+            t.SetText(num.ToString());
+            changeHealth(20);
+        }
+    }
 }

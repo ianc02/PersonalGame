@@ -25,6 +25,7 @@ public class Movement : MonoBehaviour
     public float zMax;
     public bool isRunning;
     public bool isSwimming = false;
+    public bool g;
 
 
     CharacterController characterController;
@@ -38,7 +39,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-
+        g = characterController.isGrounded;
         // Lock cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
