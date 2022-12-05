@@ -7,8 +7,9 @@ public class OpenChest : MonoBehaviour
 {
     TextMeshPro text;
     private bool lerp;
+    private bool lootlerp;
     private bool open;
-    public GameObject tool;
+    public GameObject loot;
     private Vector3 opos;
     private Vector3 newpos;
     private bool cangrab = false;
@@ -18,9 +19,9 @@ public class OpenChest : MonoBehaviour
     {
         text = GetComponentInChildren<TextMeshPro>();
         open = false;
-        if (tool != null)
+        if (loot != null)
         {
-            opos = tool.transform.position;
+            opos = loot.transform.position;
             newpos = new Vector3(opos.x, opos.y + 1.5f, opos.z);
         }
         orotx = transform.localRotation.x;
@@ -32,10 +33,11 @@ public class OpenChest : MonoBehaviour
 
         if (lerp || open)
         {
-            if (tool != null)
+            if (loot != null && lootlerp)
             {
-                Vector3 temprot = new Vector3(0, tool.transform.localEulerAngles.y + 2, 0);
-                tool.transform.localEulerAngles = temprot;
+                
+                Vector3 temprot = new Vector3(0, loot.transform.localEulerAngles.y + 2, 0);
+                loot.transform.localEulerAngles = temprot;
             }
         }
         if (lerp)
@@ -44,9 +46,9 @@ public class OpenChest : MonoBehaviour
             if (!open)
             {
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(orotx-90, 0, 0), Time.deltaTime * 1.5f);
-                if (tool != null)
+                if (loot != null && lootlerp)
                 {
-                    tool.transform.position = Vector3.Lerp(tool.transform.position, newpos, Time.deltaTime * 0.5f);
+                    loot.transform.position = Vector3.Lerp(loot.transform.position, newpos, Time.deltaTime * 0.5f);
                 }
                 
                 if (Mathf.Abs(transform.localEulerAngles.x -270) < 10)
@@ -58,9 +60,9 @@ public class OpenChest : MonoBehaviour
             else
             {
                 transform.localRotation = Quaternion.Lerp(transform.localRotation, Quaternion.Euler(orotx, 0, 0), Time.deltaTime * 1.5f);
-                if (tool != null)
+                if (loot != null && lootlerp)
                 {
-                    tool.transform.position = Vector3.Lerp(tool.transform.position, opos, Time.deltaTime * 1f);
+                    loot.transform.position = Vector3.Lerp(loot.transform.position, opos, Time.deltaTime * 1f);
                 }
                 if ( Mathf.Abs(transform.localEulerAngles.x) < 10 || transform.localEulerAngles.x >350)
                 {
@@ -69,30 +71,61 @@ public class OpenChest : MonoBehaviour
                 }
             }
         }
-        if (open && tool!=null)
+        if (open && loot!=null)
         {
             if (Input.GetKey("e") )
             {
-                Debug.Log(tool.tag);
-                Debug.Log(tool.name);
-                GameManager.Instance.addToInventory(tool.tag, tool.name);
-                Destroy(tool);
-                if (tool.name.Equals("lantern"))
+                Debug.Log(loot.tag);
+                Debug.Log(loot.name);
+                if (loot.name.Equals("gold"))
                 {
-                    
-                    GameManager.Instance.activateLantern();
-                    GameManager.Instance.addProgress();
+                    Destroy(loot);
+                    int n = Random.RandomRange(1, 5);
+                    for (int i = 0; i < n; i++)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", "coin");
+                    }
                 }
-                if (tool.name.Equals("snorkel"))
+                else if (loot.name.Equals("food"))
                 {
-                    GameManager.Instance.canusesnorkel();
-                    GameManager.Instance.addProgress();
+                    Destroy(loot);
+                    int n = Random.RandomRange(1, 5);
+                    for (int i = 0; i < n; i++)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", "coin");
+                    }
+                    int t = Random.RandomRange(1, 3);
+                    int h = Random.RandomRange(2, 4);
+                    string fruit = "apple";
+                    if (t == 3) { fruit = "apple"; }
+                    if (t == 2) { fruit = "plum"; }
+                    if (t == 1) { fruit = "pear"; }
+                    for (int i = 0; i < h; i++)
+                    {
+                        GameManager.Instance.addToInventory("Collectable", fruit);
+                    }
                 }
-                if (tool.name.Equals("lensOfTruth"))
+                else
                 {
-                    
-                    GameManager.Instance.activateLensOfTruth();
-                    GameManager.Instance.addProgress();
+                    GameManager.Instance.addToInventory(loot.tag, loot.name);
+                    Destroy(loot);
+                    if (loot.name.Equals("lantern"))
+                    {
+
+                        GameManager.Instance.activateLantern();
+                        GameManager.Instance.addProgress();
+                    }
+                    if (loot.name.Equals("snorkel"))
+                    {
+                        GameManager.Instance.canusesnorkel();
+                        GameManager.Instance.addProgress();
+                    }
+                    if (loot.name.Equals("lensOfTruth"))
+                    {
+
+                        GameManager.Instance.activateLensOfTruth();
+                        GameManager.Instance.addProgress();
+                    }
                 }
             }
         }
@@ -117,6 +150,8 @@ public class OpenChest : MonoBehaviour
 
                 lerp = true;
                 text.enabled = false;
+                lootlerp = true;
+                if (loot.name.Equals("gold") || loot.name.Equals("food")) { lootlerp = false; }
             }
         }
     }

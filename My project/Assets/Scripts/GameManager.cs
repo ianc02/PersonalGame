@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
     public GameObject sword;
     public GameObject axe;
     public GameObject bow;
+    public GameObject arrow;
+    public GameObject quiver;
+    public GameObject shield;
     public GameObject currentWeapon;
 
 
@@ -57,7 +60,7 @@ public class GameManager : MonoBehaviour
     private bool canattack = true;
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
-    private bool usensorkel = false;
+    private bool usesnorkel = false;
     private bool hasLantern = true;
     private bool hasLensOfTruth = true;
     private GameObject curNode;
@@ -86,6 +89,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        
         currentWeapon = sword;
         volume = postProcessing.GetComponent<Volume>();
         volume.profile.TryGet<ColorAdjustments>(out ca);
@@ -128,6 +132,7 @@ public class GameManager : MonoBehaviour
                 
             
         }
+        deactivateLensOfTruth();
 
     }
 
@@ -141,6 +146,7 @@ public class GameManager : MonoBehaviour
             sword.active = true;
             axe.active = false;
             bow.active = false;
+            arrow.active = false;
 
         }
         if (Input.GetKeyDown("2"))
@@ -149,6 +155,7 @@ public class GameManager : MonoBehaviour
             sword.active = false;
             axe.active = false;
             bow.active = true;
+            arrow.active = true;
 
         }
         if (Input.GetKeyDown("3"))
@@ -157,6 +164,7 @@ public class GameManager : MonoBehaviour
             sword.active = false;
             axe.active = true;
             bow.active = false;
+            arrow.active = false;
 
         }
         if (Input.GetKeyDown("e"))
@@ -327,10 +335,9 @@ public class GameManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Vector3.up, out hit, 1000f, layermask))
             {
-                Debug.Log(player.GetComponent<Movement>().rotationY);
-                Debug.Log(player.transform.rotation.y);
                 player.GetComponent<Movement>().isSwimming = true;
                 if (!lensOfTruth.active) { ca.colorFilter.value = new Color(.6f, 0.6f, 1f, 1f); }
+                if (!usesnorkel) { player.GetComponent<HealthAndHunger>().changeHealth(-0.4f); }
                 
             }
             else
@@ -393,13 +400,11 @@ public class GameManager : MonoBehaviour
 
         if (objectTag.Equals("key"))
         {
-            Debug.Log("why nt");
             foreach (Transform child in waterlevelCanvas.transform.GetChild(1))
             {
                 Debug.Log(child.name);
                 if (child.name.Equals(objectname))
                 {
-                    Debug.Log("reaches");
                     child.transform.GetChild(0).gameObject.active = true;
                 }
             }
@@ -482,12 +487,44 @@ public class GameManager : MonoBehaviour
             dialogue.Add("Luckily I have just the one for you. As you may have noticed, a dark presence has started taking over.");
             dialogue.Add("The land is covered in monsters, and we need someone to clear them out.");
             dialogue.Add("If you wish to start this perilous adventure, head to the mining shack in the southwest");
-            dialogue.Add("Once you grab the tool from there, head to the north most cave and survive.");
+            dialogue.Add("Once you grab the tool from there, head back here.");
             dialogue.Add("Good luck!");
         }
         else if (progress == 1)
         {
             dialogue.Add("Great job! Now take that lantern to the North most cave in the mountains and find the hidden treasure!");
+            dialogue.Add("It's a helpful tool that will stop you from drowning in the waters.");
+            dialogue.Add("You'll know the Right way.");
+        }
+        else if (progress == 2)
+        {
+            dialogue.Add("Terrific! You did well to survive that time.");
+            dialogue.Add("This next part is a bit tricky. Come back if you need a reminder.");
+            progress += 1;
+        }
+        if (progress == 3)
+        {
+            dialogue.Add("Your destination is the old water ruins somewhere along the bed of the river near the Northern mountains.");
+            dialogue.Add("The only help I can provide is an old rune with a small poem.");
+            dialogue.Add("'Eleven steps you must climb'");
+            dialogue.Add("'Sword sharp, hows the mind?'");
+            dialogue.Add("'Keys can come out, rain or shine'");
+            dialogue.Add("'To activate? Dry.'");
+            dialogue.Add("I wish you the best of luck. Remember, many have never returned from there, so make sure you have plenty of supplies for a long journey.");
+        }
+        else if (progress == 4)
+        {
+            dialogue.Add("Wonderful! That is a truly powerful item. I'm surprised you managed to get it this time and not starve to death.");
+            dialogue.Add("You must head to the Southern town, then follow the path towards the forest");
+            dialogue.Add("The Lens will show you the way.");
+        }
+        else if (progress == 5)
+        {
+            dialogue.Add("Way to not get lost, it's happened plenty of times before.");
+            dialogue.Add("Sorry for all the tricks, it's just fun to watch you run around for no reason.");
+            dialogue.Add("It's in there still, remember where to take it?");
+            dialogue.Add("Cemetery East of the main town. Second row, second column. Follow the signs to where she's buried.");
+            dialogue.Add("Maybe this time you'll break the cycle, but who am I kidding, we both know you can't let go.");
         }
         clicks = 0;
         talk = true;
@@ -543,7 +580,8 @@ public class GameManager : MonoBehaviour
 
     public void canusesnorkel()
     {
-        usensorkel = true;
+        usesnorkel = true;
+        snorkel.active = true;
     }
     public void activateSnorkel()
     {

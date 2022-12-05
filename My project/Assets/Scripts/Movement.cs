@@ -118,8 +118,6 @@ public class Movement : MonoBehaviour
         }
         else
         {
-            Debug.Log(transform.rotation.y);
-            Debug.Log(rotationY);
             moveDirection = Vector3.zero;
             if (Input.GetKey("w"))
             {
@@ -137,9 +135,6 @@ public class Movement : MonoBehaviour
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimitwater, lookXLimitwater);
                 rotationY += Input.GetAxis("Mouse X") * lookSpeed;
-                Debug.Log(transform.rotation.y);
-                Debug.Log(rotationY);
-                //rotationY = Mathf.Clamp(rotationY, -360, 360);
                 playerCamera.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 //float xrot = Mathf.Clamp(Input.GetAxis("Mouse X"), -70, 70);
 
@@ -147,9 +142,6 @@ public class Movement : MonoBehaviour
                 
                 transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
 
-                Debug.Log(transform.rotation.y);
-                Debug.Log(rotationY);
-                //Debug.Break();
 
                 if (!Input.GetKey("w"))
                 {

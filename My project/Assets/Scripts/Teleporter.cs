@@ -40,4 +40,5 @@ public class Teleporter : MonoBehaviour
             other.transform.position = pos;
         }
     }
+    
 }
