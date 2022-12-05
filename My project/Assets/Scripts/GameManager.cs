@@ -330,10 +330,14 @@ public class GameManager : MonoBehaviour
                 Debug.Log(player.GetComponent<Movement>().rotationY);
                 Debug.Log(player.transform.rotation.y);
                 player.GetComponent<Movement>().isSwimming = true;
+                if (!lensOfTruth.active) { ca.colorFilter.value = new Color(.6f, 0.6f, 1f, 1f); }
+                
             }
             else
             {
+                if (player.GetComponent<Movement>().isSwimming) { ca.colorFilter.value = new Color(1f, 1f, 1f, 1f); }
                 player.GetComponent<Movement>().isSwimming = false;
+                
             }
         }
     }

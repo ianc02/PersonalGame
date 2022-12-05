@@ -72,6 +72,7 @@ public class WaterKeys : MonoBehaviour
             dist += 6;
         }
         lerp = true;
+        if (dist < 0) { dist = 0; }
     }
     public void getKey(string n)
     {

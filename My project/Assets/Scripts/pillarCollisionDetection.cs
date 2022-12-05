@@ -44,7 +44,7 @@ public class pillarCollisionDetection : MonoBehaviour
                         }
                     }
                 }
-                else
+                else if (!GameManager.Instance.getPlayer().GetComponent<Movement>().isSwimming) 
                 {
                     GameManager.Instance.pauseGame();
                     waterc.gameObject.active = true;
