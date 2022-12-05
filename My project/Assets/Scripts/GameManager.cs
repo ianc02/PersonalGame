@@ -62,9 +62,9 @@ public class GameManager : MonoBehaviour
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
     private bool usesnorkel = false;
-    private bool hasLantern = true;
-    private bool hasLensOfTruth = true;
-    private bool hasMedallion = true;
+    private bool hasLantern = false;
+    private bool hasLensOfTruth = false;
+    public bool hasMedallion = false;
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
@@ -674,7 +674,7 @@ public class GameManager : MonoBehaviour
         StopCoroutine(fogDensity());
         reachedEndMaze = true;
         slowfog = false;
-
+        addProgress();
         while (RenderSettings.fogDensity > 0.02f)
         {
             yield return s;

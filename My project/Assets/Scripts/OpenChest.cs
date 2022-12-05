@@ -126,6 +126,12 @@ public class OpenChest : MonoBehaviour
                         GameManager.Instance.activateLensOfTruth();
                         GameManager.Instance.addProgress();
                     }
+                    if (loot.name.Equals("medallion"))
+                    {
+
+                        GameManager.Instance.activateMedallion();
+                        GameManager.Instance.addProgress();
+                    }
                 }
             }
         }

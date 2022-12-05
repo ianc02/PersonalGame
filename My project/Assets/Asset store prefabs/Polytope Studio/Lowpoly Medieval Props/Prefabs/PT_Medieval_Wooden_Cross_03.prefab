@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1270621989188055292}
   - component: {fileID: 1270621989187088956}
   - component: {fileID: 9126229787480949930}
+  - component: {fileID: -4638955634665303344}
   m_Layer: 0
   m_Name: PT_Medieval_Wooden_Cross_03
   m_TagString: Untagged
@@ -92,8 +93,22 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1270621989189020924}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 3, y: 5, z: 6.5}
   m_Center: {x: 0.062473923, y: 0.4057539, z: 3}
+--- !u!114 &-4638955634665303344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270621989189020924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: badc34180eba5ab42b6c2617f66a5467, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  correct: 0
+  skelly: {fileID: 6844270468130869723, guid: 019e73f0e70ac9a458f27ec1d5ede42e, type: 3}

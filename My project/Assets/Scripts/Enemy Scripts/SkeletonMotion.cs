@@ -38,6 +38,7 @@ public class SkeletonMotion : MonoBehaviour
         oripos = transform.position;
         oldpos = transform.position;
         stoppos = transform.position;
+        player = GameManager.Instance.getPlayer();
     }
 
     // Update is called once per frame

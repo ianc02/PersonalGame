@@ -18,6 +18,7 @@ public class FieldOfView : MonoBehaviour
     void Start()
     {
         StartCoroutine(FOVRoutine());
+        player = GameManager.Instance.getPlayer();
     }
 
     // Update is called once per frame
