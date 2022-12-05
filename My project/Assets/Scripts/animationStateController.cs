@@ -13,6 +13,7 @@ public class animationStateController : MonoBehaviour
     private bool spacePressed;
     private float mouseRotation;
     private bool mouse0click;
+    private bool isSwimming;
     private bool canAttack;
     public bool bowEquipped;
     public GameObject arrow;
@@ -61,7 +62,7 @@ public class animationStateController : MonoBehaviour
     void Update()
     {
 
-
+        isSwimming = player.GetComponent<Movement>().isSwimming;
          isWalking = animator.GetBool("IsWalking");
          isRunning = animator.GetBool("IsRunning");
          isAttacking = animator.GetBool("IsAttacking");
@@ -83,6 +84,7 @@ public class animationStateController : MonoBehaviour
             
         }
         currentClip = animator.GetCurrentAnimatorStateInfo(0);
+
         if (currentClip.IsName("Attacking") || bowEquipped)
         {
             animator.SetBool("IsAttacking", false);
@@ -122,7 +124,7 @@ public class animationStateController : MonoBehaviour
         }
         else
         {
-            if (!player.GetComponent<Movement>().isSwimming)
+            if (!isSwimming)
             {
                 if (Vector3.Distance(cam.transform.localPosition, camOriPos) > 0.01f)
                 {
@@ -137,77 +139,90 @@ public class animationStateController : MonoBehaviour
                 }
             }
         }
-        if (canAttack)
+        if (!isSwimming)
         {
-            
-            if (mouse0click)
+            animator.SetBool("IsSwimming", false);
+            if (canAttack)
+            {
+
+                if (mouse0click)
+                {
+                    isChilling = false;
+                    animator.SetBool("IsChilling", false);
+                    animator.SetBool("IsAttacking", true);
+                    temppos = player.transform.position;
+                    StartCoroutine(attackwait());
+                    if (GameManager.Instance.currentWeapon.name == "bow")
+                    {
+                        bowEquipped = true;
+                        animator.SetBool("BowEquipped", true);
+                        cam.GetComponent<CameraCollision>().enabled = false;
+                        GameManager.Instance.showCross();
+
+                    }
+                    //temppos = player.transform.position;
+                }
+            }
+            if (forwardPressed)
             {
                 isChilling = false;
                 animator.SetBool("IsChilling", false);
-                animator.SetBool("IsAttacking", true);
-                temppos = player.transform.position;
-                StartCoroutine(attackwait());
-                if (GameManager.Instance.currentWeapon.name == "bow")
+                if (shiftPressed)
                 {
-                    bowEquipped = true;
-                    animator.SetBool("BowEquipped", true);
-                    cam.GetComponent<CameraCollision>().enabled = false;
-                    GameManager.Instance.showCross();
-
+                    if (!isRunning)
+                    {
+                        animator.SetBool("IsRunning", true);
+                    }
                 }
-                //temppos = player.transform.position;
-            }
-        }
-        if (forwardPressed)
-        {
-            isChilling = false;
-            animator.SetBool("IsChilling", false);
-            if (shiftPressed)
-            {
-                if (!isRunning)
+                else
                 {
-                    animator.SetBool("IsRunning", true);
+                    animator.SetBool("IsRunning", false);
+
+                    if (!isWalking)
+                    {
+                        animator.SetBool("IsWalking", true);
+                    }
                 }
             }
             else
             {
+                animator.SetBool("IsWalking", false);
                 animator.SetBool("IsRunning", false);
-
-                if (!isWalking)
-                {
-                    animator.SetBool("IsWalking", true);
-                }
+                isChilling = true;
+                animator.SetBool("IsChilling", true);
+                //if (mouseRotation >= 0.05)
+                //{
+                //    animator.SetBool("Rightturn", true);
+                //}
+                //if (mouseRotation <= -0.05)
+                //{
+                //    animator.SetBool("Leftturn", true);
+                //}
+                //if (0.05 > mouseRotation && mouseRotation > -0.05)
+                //{
+                //    animator.SetBool("Rightturn", false);
+                //    animator.SetBool("Leftturn", false);
+                //}
+                // Debug.Log(mouseRotation);
+            }
+            if (spacePressed)
+            {
+                animator.SetBool("IsJumping", true);
+            }
+            else
+            {
+                animator.SetBool("IsJumping", false);
             }
         }
-        else
+        else 
         {
-            animator.SetBool("IsWalking", false);
-            animator.SetBool("IsRunning", false);
-            isChilling = true;
-            animator.SetBool("IsChilling", true);
-            //if (mouseRotation >= 0.05)
-            //{
-            //    animator.SetBool("Rightturn", true);
-            //}
-            //if (mouseRotation <= -0.05)
-            //{
-            //    animator.SetBool("Leftturn", true);
-            //}
-            //if (0.05 > mouseRotation && mouseRotation > -0.05)
-            //{
-            //    animator.SetBool("Rightturn", false);
-            //    animator.SetBool("Leftturn", false);
-            //}
-            // Debug.Log(mouseRotation);
-        }
-        if (spacePressed)
-        {
-            animator.SetBool("IsJumping",true);
-        }
-        else
-        {
+            animator.SetBool("IsSwimming", true);
             animator.SetBool("IsJumping", false);
+            animator.SetBool("IsRunning", false);
+            animator.SetBool("IsWalking", false);
         }
+
+        
 
         
 

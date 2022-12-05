@@ -119,6 +119,7 @@ public class Movement : MonoBehaviour
         }
         else
         {
+            isRunning = false;
             moveDirection = Vector3.zero;
             if (Input.GetKey("w"))
             {

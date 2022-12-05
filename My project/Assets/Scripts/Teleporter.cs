@@ -21,7 +21,7 @@ public class Teleporter : MonoBehaviour
         while (true)
         {
             yield return wait;
-            if (GameManager.Instance.getPlayer().transform.position.y < -325)
+            if (GameManager.Instance.getPlayer().transform.position.y < -310)
             {
                 break;
             }
