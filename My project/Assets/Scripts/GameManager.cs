@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public GameObject lantern;
     public GameObject snorkel;
     public GameObject lensOfTruth;
+
     public float fogDens;
     public Material sunset;
     public Material fogsky;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
     private bool usesnorkel = false;
     private bool hasLantern = true;
     private bool hasLensOfTruth = true;
+    private bool hasMedallion = true;
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
@@ -543,6 +545,10 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void activateMedallion()
+    {
+        hasMedallion = true;
+    }
     public void activateLantern()
     {
         hasLantern = true;
