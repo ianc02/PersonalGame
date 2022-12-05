@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public GameObject camtalk;
     public Camera cam;
     public Terrain terrain;
+    public GameObject lensOfTruthListHolder;
     public GameObject rockprefab;
     public GameObject woodprefab;
     public GameObject textBox;
@@ -324,8 +325,10 @@ public class GameManager : MonoBehaviour
             int layermask = 1 << 4;
             yield return wait;
             RaycastHit hit;
-            if (Physics.Raycast(player.transform.position, Vector3.up, out hit, 1000f, layermask))
+            if (Physics.Raycast(new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z), Vector3.up, out hit, 1000f, layermask))
             {
+                Debug.Log(player.GetComponent<Movement>().rotationY);
+                Debug.Log(player.transform.rotation.y);
                 player.GetComponent<Movement>().isSwimming = true;
             }
             else
@@ -514,6 +517,7 @@ public class GameManager : MonoBehaviour
         hasLensOfTruth = true;
         lensOfTruth.active = true;
         ca.colorFilter.value = new Color(1f, 0.6f, 0.6f, 1f);
+        lensOfTruthListHolder.GetComponent<lensOfTruthStuff>().lensOn();
         foreach (Transform child in signs.transform)
         {
             child.gameObject.GetComponent<MeshRenderer>().enabled = true;
@@ -525,6 +529,7 @@ public class GameManager : MonoBehaviour
     {
         lensOfTruth.active = false;
         ca.colorFilter.value = new Color(1f, 1f, 1f, 1f);
+        lensOfTruthListHolder.GetComponent<lensOfTruthStuff>().lensOff();
         foreach (Transform child in signs.transform)
         {
             child.gameObject.GetComponent<MeshRenderer>().enabled = false;

@@ -29,8 +29,8 @@ public class Movement : MonoBehaviour
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
-    float rotationX = 0;
-    float rotationY = 0;
+    public float rotationX = 0;
+    public float rotationY = 0;
 
     [HideInInspector] 
     public bool canMove = true;
@@ -56,7 +56,7 @@ public class Movement : MonoBehaviour
         {
             if (transform.rotation.x != 0)
             {
-                transform.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
+                transform.rotation = Quaternion.Euler(0, rotationY, 0);
             }
             // We are grounded, so recalculate move direction based on axes
             Vector3 forward = transform.TransformDirection(Vector3.forward);
@@ -105,6 +105,7 @@ public class Movement : MonoBehaviour
 
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+                rotationY += Input.GetAxis("Mouse X") * lookSpeed;
                 playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
                 transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
                 if (!Input.GetKey("w"))
@@ -117,6 +118,8 @@ public class Movement : MonoBehaviour
         }
         else
         {
+            Debug.Log(transform.rotation.y);
+            Debug.Log(rotationY);
             moveDirection = Vector3.zero;
             if (Input.GetKey("w"))
             {
@@ -134,14 +137,19 @@ public class Movement : MonoBehaviour
                 rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
                 rotationX = Mathf.Clamp(rotationX, -lookXLimitwater, lookXLimitwater);
                 rotationY += Input.GetAxis("Mouse X") * lookSpeed;
+                Debug.Log(transform.rotation.y);
+                Debug.Log(rotationY);
                 //rotationY = Mathf.Clamp(rotationY, -360, 360);
                 playerCamera.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 //float xrot = Mathf.Clamp(Input.GetAxis("Mouse X"), -70, 70);
+
+                //transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
                 
-                transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
-                transform.rotation = Quaternion.Euler(rotationX, rotationY, transform.rotation.z);
+                transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
 
-
+                Debug.Log(transform.rotation.y);
+                Debug.Log(rotationY);
+                //Debug.Break();
 
                 if (!Input.GetKey("w"))
                 {
