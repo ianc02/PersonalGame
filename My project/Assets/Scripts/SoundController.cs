@@ -11,17 +11,24 @@ public class SoundController : MonoBehaviour
     public AudioSource CavernMusic;
     public AudioSource WaterMusic;
     public AudioSource ForestMusic;
+    public AudioSource hitSound;
+    public AudioSource collectSound;
     public GameObject grasssteps;
     public GameObject stonesteps;
+    public float stepSpeed;
+    public float runSpeed;
 
     private List<AudioSource> grassStepsList;
     private List<AudioSource> stoneStepsList;
     private List<AudioSource> currentList;
     private int step = 0;
+    public GameObject player;
     void Start()
     {
-        StartCoroutine(FadeInMusic(FieldsMusic));
+        StartCoroutine(FadeInMusic(MainMenuMusic));
         StartCoroutine(forestMusicCheck());
+        grassStepsList = new List<AudioSource>();
+        stoneStepsList = new List<AudioSource>();
         foreach (Transform child in grasssteps.transform)
         {
             grassStepsList.Add(child.transform.gameObject.GetComponent<AudioSource>());
@@ -31,6 +38,8 @@ public class SoundController : MonoBehaviour
         {
             stoneStepsList.Add(child.transform.gameObject.GetComponent<AudioSource>());
         }
+        currentList = grassStepsList;
+        StartCoroutine(footsteps());
     }
 
     // Update is called once per frame
@@ -41,14 +50,33 @@ public class SoundController : MonoBehaviour
 
     public IEnumerator footsteps()
     {
-        while (currentList[step%4].isPlaying)
+        WaitForSeconds wait = new WaitForSeconds(0.07f);
+        while (true)
         {
-            yield return null;
+            yield return wait;
+            if (!player.GetComponent<Movement>().isSwimming)
+            {
+                if (!currentList[step % 4].isPlaying)
+                {
+                    if (currentMusic == CavernMusic || currentMusic == WaterMusic) { currentList = stoneStepsList; }
+                    else { currentList = grassStepsList; }
+                    step += 1;
+                    if (Input.GetKey("w"))
+                    {
+                        if (Input.GetKey(KeyCode.LeftShift))
+                        {
+                            currentList[step % 4].pitch = runSpeed;
+                        }
+                        else
+                        {
+                            currentList[step % 4].pitch = stepSpeed;
+                        }
+                        currentList[step % 4].Play();
+                    }
+                }
+            }
+            
         }
-        if (currentMusic==CavernMusic || currentMusic == WaterMusic) { currentList = stoneStepsList; }
-        else { currentList = grassStepsList; }
-        step += 1;
-        if (Input.GetKey("w")) { currentList[step].Play(); }
     }
     public IEnumerator FadeOutMusic(AudioSource source)
     {
@@ -57,7 +85,7 @@ public class SoundController : MonoBehaviour
         while (!done)
         {
             yield return wait;
-            source.volume *= 0.95f;
+            source.volume *= 0.94f;
             if (source.volume < 0.03f)
             {
                 done = true;
@@ -66,10 +94,7 @@ public class SoundController : MonoBehaviour
 
         }
     }
-    public void AdjustVolume(float newVolume)
-    {
-        AudioListener.volume = newVolume;
-    }
+    
 
     public IEnumerator FadeInMusic(AudioSource source)
     {
@@ -82,10 +107,10 @@ public class SoundController : MonoBehaviour
         {
             yield return wait;
             source.volume *= 1.05f;
-            if (source.volume > 0.95f)
+            if (source.volume > 0.52f)
             {
                 done = true;
-                source.volume = 1f;
+                source.volume = 0.55f;
             }
 
         }
@@ -99,20 +124,24 @@ public class SoundController : MonoBehaviour
             yield return wait;
             if (RenderSettings.fogDensity > 0f && currentMusic!=ForestMusic)
             {
-                Debug.Log("bleep");
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(ForestMusic));
             }
             else if ((RenderSettings.fogDensity == 0f && currentMusic == ForestMusic))
             {
-                Debug.Log("Fuck");
                 StartCoroutine(FadeOutMusic(currentMusic));
                 StartCoroutine(FadeInMusic(FieldsMusic));
             }
-            else
-            {
-                Debug.Log(RenderSettings.fogDensity);
-            }
         }
+    }
+
+    public void playHitSound()
+    {
+        hitSound.Play();
+    }
+
+    public void playCollectSound()
+    {
+        collectSound.Play();
     }
 }

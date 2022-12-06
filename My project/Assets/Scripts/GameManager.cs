@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public Canvas shopCanvas;
     public Canvas statusCanvas;
     public Canvas waterlevelCanvas;
+    public Canvas mainMenu;
     public GameObject postProcessing;
     public GameObject player;
     public GameObject playerBody;
@@ -142,172 +143,178 @@ public class GameManager : MonoBehaviour
             
         }
         deactivateLensOfTruth();
+        pauseGame();
+        Time.timeScale = 1f;
 
     }
 
-    
+
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown("1"))
+        if (!mainMenu.gameObject.active)
         {
-            if (!playerBody.GetComponent<animationStateController>().bowEquipped)
+            if (Input.GetKeyDown("1"))
             {
-                currentWeapon = sword;
-                sword.active = true;
-                axe.active = false;
-                bow.active = false;
-                arrow.active = false;
+                if (!playerBody.GetComponent<animationStateController>().bowEquipped)
+                {
+                    currentWeapon = sword;
+                    sword.active = true;
+                    axe.active = false;
+                    bow.active = false;
+                    arrow.active = false;
+                }
+
             }
-
-        }
-        if (Input.GetKeyDown("2") && hasBow)
-        {
-            currentWeapon = bow;
-            sword.active = false;
-            axe.active = false;
-            bow.active = true;
-            arrow.active = true;
-            lantern.active = false;
-            lensOfTruth.active = false;
-
-        }
-        if (Input.GetKeyDown("3"))
-        {
-            if (!playerBody.GetComponent<animationStateController>().bowEquipped)
+            if (Input.GetKeyDown("2") && hasBow)
             {
-                currentWeapon = axe;
+                currentWeapon = bow;
                 sword.active = false;
-                axe.active = true;
-                bow.active = false;
-                arrow.active = false;
-            }
+                axe.active = false;
+                bow.active = true;
+                arrow.active = true;
+                lantern.active = false;
+                lensOfTruth.active = false;
 
-        }
-        if (Input.GetKeyDown("e"))
-        {
-            terrain.GetComponent<TreeCollsionDetector>().checkTrees();
-        }
-        if (currentWeapon != bow)
-        {
-            if (hasLantern)
+            }
+            if (Input.GetKeyDown("3"))
             {
-                if (Input.GetKeyDown("l"))
+                if (!playerBody.GetComponent<animationStateController>().bowEquipped)
                 {
-                    if (lantern.active)
+                    currentWeapon = axe;
+                    sword.active = false;
+                    axe.active = true;
+                    bow.active = false;
+                    arrow.active = false;
+                }
+
+            }
+            if (Input.GetKeyDown("e"))
+            {
+                terrain.GetComponent<TreeCollsionDetector>().checkTrees();
+            }
+            if (currentWeapon != bow)
+            {
+                if (hasLantern)
+                {
+                    if (Input.GetKeyDown("l"))
                     {
-                        deactivateLantern();
-                    }
-                    else
-                    {
-                        if (!lensOfTruth.active)
+                        if (lantern.active)
                         {
-                            activateLantern();
+                            deactivateLantern();
+                        }
+                        else
+                        {
+                            if (!lensOfTruth.active)
+                            {
+                                activateLantern();
+                            }
+                        }
+                    }
+                }
+                if (hasLensOfTruth)
+                {
+                    if (Input.GetKeyDown("t"))
+                    {
+                        if (lensOfTruth.active)
+                        {
+                            deactivateLensOfTruth();
+                        }
+                        else
+                        {
+                            if (!lantern.active)
+                            {
+                                activateLensOfTruth();
+                            }
                         }
                     }
                 }
             }
-            if (hasLensOfTruth)
+            if (Input.GetKeyDown("q"))
             {
-                if (Input.GetKeyDown("t"))
+                if (inventory.gameObject.active)
                 {
-                    if (lensOfTruth.active)
-                    {
-                        deactivateLensOfTruth();
-                    }
-                    else
-                    {
-                        if (!lantern.active)
-                        {
-                            activateLensOfTruth();
-                        }
-                    }
+                    inventory.gameObject.SetActive(false);
+                    resumeGame();
                 }
-            }
-        }
-        if (Input.GetKeyDown("q"))
-        {
-            if (inventory.gameObject.active)
-            {
-                inventory.gameObject.SetActive(false);
-                resumeGame();
-            }
-            else
-            {
-                inventory.gameObject.SetActive(true);
-                pauseGame();
-            }
-        }
-        else if (Input.GetKeyDown("escape"))
-        {
-            if (pauseMenu.gameObject.active)
-            {
-                pauseMenu.gameObject.SetActive(false);
-                resumeGame();
-            }
-            else
-            {
-                pauseMenu.gameObject.SetActive(true);
-                pauseGame();
-            }
-
-           
-        }
-        
-        if (lerp)
-        {
-            if (talk)
-            {
-                talkingVillager.GetComponent<TownsfolkBehavior>().talking = true;
-                talkingVillager.transform.GetChild(0).gameObject.active = false;
-                cam.transform.position = Vector3.Lerp(cam.transform.position, camtalk.transform.position, Time.deltaTime * 2f);
-                cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camtalk.transform.rotation, Time.deltaTime * 2f);
-            }
-            else
-            {
-                if (!shopCanvas.gameObject.active)
+                else
                 {
-                    cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
-                    cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
-                    player.GetComponent<Movement>().setCanMove(false);
-                    if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
-                    {
-                        lerp = false;
-                        player.GetComponent<Movement>().setCanMove(true);
-                        canattack = true;
-
-                        talkingVillager.GetComponent<TownsfolkBehavior>().talking = false;
-                        talkingVillager.transform.GetChild(0).gameObject.active = true;
-                    }
-                }
-            }
-
-        }
-        
-        if (talk)
-        {
-            
-            if (clicks < dialogue.Count)
-            {
-
-               dialogueText.text = (string) dialogue[clicks];
-               if (Input.GetMouseButtonDown(0))
-                {
-                    clicks += 1;
-                }
-            }
-            if (clicks >= dialogue.Count)
-            {
-                if (talkingVillager.name.Equals("Merchant")){
-                    shopCanvas.gameObject.active = true;
-                    coinsInStoreText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
-                    coinsInInvText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                    inventory.gameObject.SetActive(true);
                     pauseGame();
                 }
-                dialogueCanvas.gameObject.SetActive(false);
-                dialogue = new ArrayList();
-                talk = false;
-                
+            }
+            else if (Input.GetKeyDown("escape"))
+            {
+                if (pauseMenu.gameObject.active)
+                {
+                    pauseMenu.gameObject.SetActive(false);
+                    resumeGame();
+                }
+                else
+                {
+                    pauseMenu.gameObject.SetActive(true);
+                    pauseGame();
+                }
+
+
+            }
+
+            if (lerp)
+            {
+                if (talk)
+                {
+                    talkingVillager.GetComponent<TownsfolkBehavior>().talking = true;
+                    talkingVillager.transform.GetChild(0).gameObject.active = false;
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, camtalk.transform.position, Time.deltaTime * 2f);
+                    cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camtalk.transform.rotation, Time.deltaTime * 2f);
+                }
+                else
+                {
+                    if (!shopCanvas.gameObject.active)
+                    {
+                        cam.transform.position = Vector3.Lerp(cam.transform.position, camoriginalpos, Time.deltaTime * 2f);
+                        cam.transform.rotation = Quaternion.Lerp(cam.transform.rotation, camoriginalrot, Time.deltaTime * 2f);
+                        player.GetComponent<Movement>().setCanMove(false);
+                        if (Vector3.Distance(cam.transform.position, camoriginalpos) < 0.01)
+                        {
+                            lerp = false;
+                            player.GetComponent<Movement>().setCanMove(true);
+                            canattack = true;
+
+                            talkingVillager.GetComponent<TownsfolkBehavior>().talking = false;
+                            talkingVillager.transform.GetChild(0).gameObject.active = true;
+                        }
+                    }
+                }
+
+            }
+
+            if (talk)
+            {
+
+                if (clicks < dialogue.Count)
+                {
+
+                    dialogueText.text = (string)dialogue[clicks];
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        clicks += 1;
+                    }
+                }
+                if (clicks >= dialogue.Count)
+                {
+                    if (talkingVillager.name.Equals("Merchant"))
+                    {
+                        shopCanvas.gameObject.active = true;
+                        coinsInStoreText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                        coinsInInvText.GetComponent<TextMeshProUGUI>().text = (coinCount.ToString());
+                        pauseGame();
+                    }
+                    dialogueCanvas.gameObject.SetActive(false);
+                    dialogue = new ArrayList();
+                    talk = false;
+
+                }
             }
         }
     }
@@ -416,6 +423,46 @@ public class GameManager : MonoBehaviour
     public void removePauseMenu()
     {
         pauseMenu.gameObject.SetActive(false);
+        resumeGame();
+        
+    }
+     
+    public void mainMenuOn()
+    {
+        mainMenu.gameObject.active = true;
+        pauseGame();
+        Time.timeScale = 1f;
+        StartCoroutine(soundController.GetComponent<SoundController>().FadeOutMusic(soundController.GetComponent<SoundController>().currentMusic));
+        StartCoroutine(soundController.GetComponent<SoundController>().FadeInMusic(soundController.GetComponent<SoundController>().MainMenuMusic));
+    }
+    public void mainMenuOff()
+    {
+        mainMenu.gameObject.active = false;
+        resumeGame();
+        StartCoroutine(soundController.GetComponent<SoundController>().FadeOutMusic(soundController.GetComponent<SoundController>().MainMenuMusic));
+        StartCoroutine(soundController.GetComponent<SoundController>().FadeInMusic(soundController.GetComponent<SoundController>().FieldsMusic));
+    }
+
+    public void AdjustVolume(float newVolume)
+    {
+        AudioListener.volume = newVolume;
+    }
+
+    public void settingsPushed()
+    {
+        pauseMenu.gameObject.transform.GetChild(0).gameObject.active = false;
+        pauseMenu.gameObject.transform.GetChild(1).gameObject.active = false;
+        pauseMenu.gameObject.transform.GetChild(2).gameObject.active = false;
+        pauseMenu.gameObject.transform.GetChild(3).gameObject.active = true;
+        pauseMenu.gameObject.transform.GetChild(4).gameObject.active = true;
+    }
+    public void leaveSettings()
+    {
+        pauseMenu.gameObject.transform.GetChild(0).gameObject.active = true;
+        pauseMenu.gameObject.transform.GetChild(1).gameObject.active = true;
+        pauseMenu.gameObject.transform.GetChild(2).gameObject.active = true;
+        pauseMenu.gameObject.transform.GetChild(3).gameObject.active = false;
+        pauseMenu.gameObject.transform.GetChild(4).gameObject.active = false;
     }
     public Camera getcamera()
     {
@@ -432,6 +479,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log(child.name);
                 if (child.name.Equals(objectname))
                 {
+                    soundController.GetComponent<SoundController>().playCollectSound();
                     child.transform.GetChild(0).gameObject.active = true;
                 }
             }
@@ -452,16 +500,19 @@ public class GameManager : MonoBehaviour
                                 grandchild.GetChild(0).gameObject.active = true;
                                 if (objectname.Equals("bow"))
                                 {
+                                    soundController.GetComponent<SoundController>().playCollectSound();
                                     hasBow = true;
                                 }
                                 if (objectname.Equals("quiver"))
                                 {
+                                    soundController.GetComponent<SoundController>().playCollectSound();
                                     quiver.active = true;
                                     maxArrows = 12;
                                 }
                             }
                             else if (objectTag.Equals("Special"))
                             {
+                                soundController.GetComponent<SoundController>().playCollectSound();
                                 grandchild.GetChild(0).gameObject.active = true;
                             }
                             else
@@ -483,6 +534,7 @@ public class GameManager : MonoBehaviour
                                     }
                                     currentArrows = num;
                                 }
+                                soundController.GetComponent<SoundController>().playCollectSound();
                                 grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                             }
                         }

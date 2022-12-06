@@ -14,18 +14,22 @@ public class WeaponBehavior : MonoBehaviour
         {
             
             other.gameObject.GetComponent<PlagueMovement>().damage();
+            GameManager.Instance.soundController.GetComponent<SoundController>().playHitSound();
         }
         if (other.CompareTag("Gronch"))
         {
             other.GetComponentInParent<GronchMovement>().damage();
+            GameManager.Instance.soundController.GetComponent<SoundController>().playHitSound();
         }
         if (other.CompareTag("Elemental"))
         {
             other.GetComponentInParent<ElementalMovement>().damage();
+            GameManager.Instance.soundController.GetComponent<SoundController>().playHitSound();
         }
         if (other.CompareTag("Skeleton"))
         {
             other.GetComponentInParent<SkeletonMotion>().damage();
+            GameManager.Instance.soundController.GetComponent<SoundController>().playHitSound();
         }
     }
 }

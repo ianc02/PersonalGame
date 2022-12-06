@@ -78,7 +78,7 @@ public class HealthAndHunger : MonoBehaviour
         if (health <= 0)
         {
             health = 100;
-            gameObject.transform.position = new Vector3(471.412048f, 134.537003f, 515.718567f);
+            gameObject.transform.position = new Vector3(471.412048f, 136.537003f, 515.718567f);
 
         }
         healthImage.fillAmount = Mathf.Clamp(health / healthMax, 0, 1f);
