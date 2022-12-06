@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public GameObject snorkel;
     public GameObject lensOfTruth;
     public GameObject waterLevel;
+    public GameObject soundController;
 
     public float fogDens;
     public Material sunset;
