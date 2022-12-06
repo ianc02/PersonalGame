@@ -67,10 +67,10 @@ public class GameManager : MonoBehaviour
     private bool canattack = true;
     private Vector3 camoriginalpos;
     private Quaternion camoriginalrot;
-    private bool usesnorkel = true;
-    private bool hasLantern = true;
-    private bool hasLensOfTruth = true;
-    public bool hasMedallion = true;
+    private bool usesnorkel = false;
+    private bool hasLantern = false;
+    private bool hasLensOfTruth = false;
+    public bool hasMedallion = false;
     private bool hasBow;
     private GameObject curNode;
     private GameObject prevNode;
@@ -429,6 +429,7 @@ public class GameManager : MonoBehaviour
      
     public void mainMenuOn()
     {
+        statusCanvas.gameObject.active = false;
         mainMenu.gameObject.active = true;
         pauseGame();
         Time.timeScale = 1f;
@@ -437,6 +438,7 @@ public class GameManager : MonoBehaviour
     }
     public void mainMenuOff()
     {
+        statusCanvas.gameObject.active = true;
         mainMenu.gameObject.active = false;
         resumeGame();
         StartCoroutine(soundController.GetComponent<SoundController>().FadeOutMusic(soundController.GetComponent<SoundController>().MainMenuMusic));

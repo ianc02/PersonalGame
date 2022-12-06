@@ -119,4 +119,7 @@ public class TownsfolkBehavior : MonoBehaviour
             animator.SetBool("Chilling", false);
         }
     }
+
+
+    
 }
