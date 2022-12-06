@@ -18,6 +18,7 @@ public class TownsfolkBehavior : MonoBehaviour
     private bool chilling = true;
     private bool scared = false;
     public bool talking;
+    public float walkRadius; 
 
 
     // Start is called before the first frame update
@@ -33,6 +34,7 @@ public class TownsfolkBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (!scared)
         {
             if (!talking)
@@ -69,8 +71,8 @@ public class TownsfolkBehavior : MonoBehaviour
     {
         if (!walking)
         {
-            float newx = Random.Range(transform.position.x - 20f, transform.position.x + 20f);
-            float newz = Random.Range(transform.position.z - 20f, transform.position.z + 20f);
+            float newx = Random.Range(transform.position.x - walkRadius, transform.position.x + walkRadius);
+            float newz = Random.Range(transform.position.z - walkRadius, transform.position.z + walkRadius);
             RaycastHit hit;
             if (Physics.Raycast(new Vector3(newx, transform.position.y + 100f, newz), Vector3.down, out hit))
             {

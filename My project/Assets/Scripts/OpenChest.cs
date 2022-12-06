@@ -151,7 +151,7 @@ public class OpenChest : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (Input.GetKey("e") && !GameManager.Instance.getPlayer().GetComponent<Movement>().isSwimming)
+            if (Input.GetKeyDown("e") && !GameManager.Instance.getPlayer().GetComponent<Movement>().isSwimming)
             {
 
                 lerp = true;

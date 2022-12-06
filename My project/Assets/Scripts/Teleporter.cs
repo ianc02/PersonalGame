@@ -45,6 +45,15 @@ public class Teleporter : MonoBehaviour
                 cavernprops.active = true;
                 cavernMobs.active = true;
             }
+            else
+            {
+                RenderSettings.skybox = sunset;
+                RenderSettings.ambientIntensity = 1;
+
+                light.active = true;
+                cavernprops.active = false;
+                cavernMobs.active = false;
+            }
             if (pos.z > 1300)
             {
                 other.gameObject.GetComponent<Movement>().canMove = false;
@@ -54,15 +63,7 @@ public class Teleporter : MonoBehaviour
                 GameManager.Instance.waterLevel.GetComponent<WaterKeys>().speed = 1f;
                 StartCoroutine(waiter());
             }
-            else
-            {
-                RenderSettings.skybox = sunset; 
-                RenderSettings.ambientIntensity = 1;
-
-                light.active = true;
-                cavernprops.active = false;
-                cavernMobs.active = false;
-            }
+            
             other.transform.position = pos;
         }
     }

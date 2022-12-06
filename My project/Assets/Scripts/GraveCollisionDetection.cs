@@ -23,8 +23,7 @@ public class GraveCollisionDetection : MonoBehaviour
                     }
                     else
                     {
-                        GameObject skeleton = Instantiate(skelly);
-                        skeleton.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 5);
+                        skelly.active = true;
                     }
                 }
             }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class animationStateController : MonoBehaviour
 {
@@ -19,6 +21,8 @@ public class animationStateController : MonoBehaviour
     public GameObject arrow;
     private Animator animator;
     private Vector3 temppos;
+    private float tempPosx;
+    private float tempPosz;
     private GameObject player;
     private Camera cam;
     private Vector3 camOriPos;
@@ -88,7 +92,7 @@ public class animationStateController : MonoBehaviour
         if (currentClip.IsName("Attacking") || bowEquipped)
         {
             animator.SetBool("IsAttacking", false);
-            player.transform.position = temppos;
+            player.transform.position = new Vector3(tempPosx, player.transform.position.y, tempPosz);
         }
         if (bowEquipped)
         {
@@ -109,7 +113,7 @@ public class animationStateController : MonoBehaviour
                 GameManager.Instance.hideCross();
             }
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, camBowPos, Time.deltaTime * 3f);
-            if (currentClip.IsName("Shoot") && !prevclip.IsName("Shoot"))
+            if (currentClip.IsName("Shoot") && !prevclip.IsName("Shoot") && GameManager.Instance.currentArrows > 0)
             {
                 
                 GameObject arrow2 = Instantiate(arrow);
@@ -119,6 +123,9 @@ public class animationStateController : MonoBehaviour
                 arrow2.GetComponent<Rigidbody>().isKinematic = false;
                 arrow2.GetComponent<Rigidbody>().AddForce(((cam.transform.forward +(cam.transform.up/10f))) * 800);
                 arrow2.GetComponent<TrailRenderer>().enabled = true;
+                GameManager.Instance.currentArrows -= 1;
+                GameManager.Instance.inventory.transform.Find("Collectable").Find("arrows").GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().SetText(GameManager.Instance.currentArrows.ToString());
+
                 //StartCoroutine(shootArrow());
             }
         }
@@ -151,6 +158,8 @@ public class animationStateController : MonoBehaviour
                     animator.SetBool("IsChilling", false);
                     animator.SetBool("IsAttacking", true);
                     temppos = player.transform.position;
+                    tempPosz = temppos.z;
+                    tempPosx = temppos.x;
                     StartCoroutine(attackwait());
                     if (GameManager.Instance.currentWeapon.name == "bow")
                     {

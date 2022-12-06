@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public Canvas waterlevelCanvas;
     public GameObject postProcessing;
     public GameObject player;
+    public GameObject playerBody;
     public GameObject camtalk;
     public Camera cam;
     public Terrain terrain;
@@ -49,6 +50,8 @@ public class GameManager : MonoBehaviour
     public GameObject quiver;
     public GameObject shield;
     public GameObject currentWeapon;
+    public int currentArrows;
+    public int maxArrows;
 
 
 
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour
     private bool hasLantern = true;
     private bool hasLensOfTruth = true;
     public bool hasMedallion = true;
+    private bool hasBow;
     private GameObject curNode;
     private GameObject prevNode;
     private GameObject nextNode;
@@ -92,7 +96,8 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        
+        currentArrows = 0;
+        maxArrows = 6;
         currentWeapon = sword;
         volume = postProcessing.GetComponent<Volume>();
         volume.profile.TryGet<ColorAdjustments>(out ca);
@@ -145,14 +150,17 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown("1"))
         {
-            currentWeapon = sword;
-            sword.active = true;
-            axe.active = false;
-            bow.active = false;
-            arrow.active = false;
+            if (!playerBody.GetComponent<animationStateController>().bowEquipped)
+            {
+                currentWeapon = sword;
+                sword.active = true;
+                axe.active = false;
+                bow.active = false;
+                arrow.active = false;
+            }
 
         }
-        if (Input.GetKeyDown("2"))
+        if (Input.GetKeyDown("2") && hasBow)
         {
             currentWeapon = bow;
             sword.active = false;
@@ -165,46 +173,53 @@ public class GameManager : MonoBehaviour
         }
         if (Input.GetKeyDown("3"))
         {
-            currentWeapon = axe;
-            sword.active = false;
-            axe.active = true;
-            bow.active = false;
-            arrow.active = false;
+            if (!playerBody.GetComponent<animationStateController>().bowEquipped)
+            {
+                currentWeapon = axe;
+                sword.active = false;
+                axe.active = true;
+                bow.active = false;
+                arrow.active = false;
+            }
 
         }
         if (Input.GetKeyDown("e"))
         {
             terrain.GetComponent<TreeCollsionDetector>().checkTrees();
         }
-        if (hasLantern) {
-            if (Input.GetKeyDown("l"))
+        if (currentWeapon != bow)
+        {
+            if (hasLantern)
             {
-                if (lantern.active)
+                if (Input.GetKeyDown("l"))
                 {
-                    deactivateLantern();
-                }
-                else
-                {
-                    if (!lensOfTruth.active)
+                    if (lantern.active)
                     {
-                        activateLantern();
+                        deactivateLantern();
+                    }
+                    else
+                    {
+                        if (!lensOfTruth.active)
+                        {
+                            activateLantern();
+                        }
                     }
                 }
             }
-        }
-        if (hasLensOfTruth)
-        {
-            if (Input.GetKeyDown("t"))
+            if (hasLensOfTruth)
             {
-                if (lensOfTruth.active)
+                if (Input.GetKeyDown("t"))
                 {
-                    deactivateLensOfTruth();
-                }
-                else
-                {
-                    if (!lantern.active)
+                    if (lensOfTruth.active)
                     {
-                        activateLensOfTruth();
+                        deactivateLensOfTruth();
+                    }
+                    else
+                    {
+                        if (!lantern.active)
+                        {
+                            activateLensOfTruth();
+                        }
                     }
                 }
             }
@@ -388,11 +403,14 @@ public class GameManager : MonoBehaviour
     }
     public void resumeGame()
     {
-        Time.timeScale = 1f;
-        player.GetComponent<Movement>().setCanMove(true);
-        canattack = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (!inventory.gameObject.active && !shopCanvas.gameObject.active && !pauseMenu.gameObject.active)
+        {
+            Time.timeScale = 1f;
+            player.GetComponent<Movement>().setCanMove(true);
+            canattack = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     public void removePauseMenu()
     {
@@ -431,6 +449,15 @@ public class GameManager : MonoBehaviour
                             if (objectTag.Equals("WeaponsAndArmor"))
                             {
                                 grandchild.GetChild(0).gameObject.active = true;
+                                if (objectname.Equals("bow"))
+                                {
+                                    hasBow = true;
+                                }
+                                if (objectname.Equals("quiver"))
+                                {
+                                    quiver.active = true;
+                                    maxArrows = 12;
+                                }
                             }
                             else if (objectTag.Equals("Special"))
                             {
@@ -449,10 +476,11 @@ public class GameManager : MonoBehaviour
                                 if (objectname.Equals("arrows"))
                                 {
                                     num += 2;
-                                    if (num > 10)
+                                    if (num > maxArrows)
                                     {
-                                        num = 10;
+                                        num = maxArrows;
                                     }
+                                    currentArrows = num;
                                 }
                                 grandchild.GetComponentInChildren<TextMeshProUGUI>().SetText(num.ToString());
                             }
@@ -540,6 +568,7 @@ public class GameManager : MonoBehaviour
         dialogueCanvas.gameObject.SetActive(true);
         camoriginalpos = cam.transform.position;
         camoriginalrot = cam.transform.rotation;
+        cam.GetComponent<CameraCollision>().enabled = true;
 
 
 
@@ -703,6 +732,104 @@ public class GameManager : MonoBehaviour
         RenderSettings.fogDensity = 0;
         cam.transform.GetChild(0).gameObject.active = false;
     }
+    //public void nodeChanger(GameObject collided)
+    //{
+    //    if (collided.gameObject.name.Equals("ArrowSign (40)"))
+    //    {
+    //        slowfog = false;
+    //        StartCoroutine(SignGone());
+    //    }
+    //    if (curNode == null)
+    //    {
+    //        if (collided.Equals(signll.First.Value))
+    //        {
+    //            curNode = collided;
+    //            nextNode = signll.Find(curNode).Next.Value;
+    //            ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    //            Vector3 between2 = new Vector3();
+    //            between2 = nextNode.transform.position - curNode.transform.position;
+    //            float dist2 = between2.magnitude;
+    //            Vector3 scale = ctn.transform.localScale;
+    //            scale.Set(15f, 15f, dist2 + 10f);
+    //            ctn.transform.localScale = scale;
+    //            ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+    //            ctn.transform.LookAt(nextNode.transform.position);
+    //            ctn.GetComponent<MeshRenderer>().enabled = false;
+    //            ctn.GetComponent<BoxCollider>().isTrigger = true;
+    //            ctn.AddComponent<PathwayColliion>();
+    //            ctn.layer = 8;
+    //        }
+
+    //    }
+    //    else
+    //    {
+
+    //        if (collided.Equals(signll.Find(curNode).Next.Value) || collided.Equals(signll.Find(curNode).Previous.Value))
+    //        {
+    //            prevNode = curNode;
+    //            curNode = collided;
+    //            if (ctp != null)
+    //            {
+    //                Destroy(ctp);
+    //            }
+    //            ctp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    //            Vector3 between = new Vector3();
+    //            between = curNode.transform.position - prevNode.transform.position;
+    //            float dist = between.magnitude;
+    //            Vector3 scale = ctp.transform.localScale;
+    //            scale.Set(15f, 15f, dist + 10f);
+    //            ctp.transform.localScale = scale;
+    //            ctp.transform.position = prevNode.transform.position + (between / 2.0f);
+    //            ctp.transform.LookAt(curNode.transform.position);
+    //            ctp.GetComponent<MeshRenderer>().enabled = false;
+    //            ctp.GetComponent<BoxCollider>().isTrigger = true;
+    //            ctp.AddComponent<PathwayColliion>();
+    //            ctp.layer = 8;
+
+    //            if (signll.Find(curNode).Next != null)
+    //            {
+    //                nextNode = signll.Find(curNode).Next.Value;
+    //                Destroy(ctn);
+    //                ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    //                Vector3 between2 = new Vector3();
+    //                between2 = nextNode.transform.position - curNode.transform.position;
+    //                float dist2 = between2.magnitude;
+    //                Vector3 scale2 = ctn.transform.localScale;
+    //                scale2.Set(15f, 15f, dist2 + 10f);
+    //                ctn.transform.localScale = scale2;
+    //                ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
+    //                ctn.transform.LookAt(nextNode.transform.position);
+    //                ctn.GetComponent<MeshRenderer>().enabled = false;
+    //                ctn.GetComponent<BoxCollider>().isTrigger = true;
+    //                ctn.AddComponent<PathwayColliion>();
+    //                ctn.layer = 8;
+
+    //            }
+
+    //        }
+    //    }
+    //}
+
+
+
+
+    public GameObject pathObjMaker(GameObject higher, GameObject lower)
+    {
+        GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Vector3 between = new Vector3();
+        between = higher.transform.position - lower.transform.position;
+        float dist = between.magnitude;
+        Vector3 scale = temp.transform.localScale;
+        scale.Set(15f, 15f, dist + 10f);
+        temp.transform.localScale = scale;
+        temp.transform.position = lower.transform.position + (between / 2.0f);
+        temp.transform.LookAt(higher.transform.position);
+        temp.GetComponent<MeshRenderer>().enabled = false;
+        temp.GetComponent<BoxCollider>().isTrigger = true;
+        temp.AddComponent<PathwayColliion>();
+        temp.layer = 8;
+        return temp;
+    }
     public void nodeChanger(GameObject collided)
     {
         if (collided.gameObject.name.Equals("ArrowSign (40)"))
@@ -716,19 +843,7 @@ public class GameManager : MonoBehaviour
             {
                 curNode = collided;
                 nextNode = signll.Find(curNode).Next.Value;
-                ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Vector3 between2 = new Vector3();
-                between2 = nextNode.transform.position - curNode.transform.position;
-                float dist2 = between2.magnitude;
-                Vector3 scale = ctn.transform.localScale;
-                scale.Set(15f, 15f, dist2 + 10f);
-                ctn.transform.localScale = scale;
-                ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
-                ctn.transform.LookAt(nextNode.transform.position);
-                ctn.GetComponent<MeshRenderer>().enabled = false;
-                ctn.GetComponent<BoxCollider>().isTrigger = true;
-                ctn.AddComponent<PathwayColliion>();
-                ctn.layer = 8;
+                ctn = pathObjMaker(nextNode, curNode);
             }
 
         }
@@ -743,37 +858,14 @@ public class GameManager : MonoBehaviour
                 {
                     Destroy(ctp);
                 }
-                ctp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                Vector3 between = new Vector3();
-                between = curNode.transform.position - prevNode.transform.position;
-                float dist = between.magnitude;
-                Vector3 scale = ctp.transform.localScale;
-                scale.Set(15f, 15f, dist + 10f);
-                ctp.transform.localScale = scale;
-                ctp.transform.position = prevNode.transform.position + (between / 2.0f);
-                ctp.transform.LookAt(curNode.transform.position);
-                ctp.GetComponent<MeshRenderer>().enabled = false;
-                ctp.GetComponent<BoxCollider>().isTrigger = true;
-                ctp.AddComponent<PathwayColliion>();
-                ctp.layer = 8;
+                ctp = pathObjMaker(curNode, prevNode);
 
                 if (signll.Find(curNode).Next != null)
                 {
                     nextNode = signll.Find(curNode).Next.Value;
                     Destroy(ctn);
-                    ctn = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    Vector3 between2 = new Vector3();
-                    between2 = nextNode.transform.position - curNode.transform.position;
-                    float dist2 = between2.magnitude;
-                    Vector3 scale2 = ctn.transform.localScale;
-                    scale2.Set(15f, 15f, dist2 + 10f);
-                    ctn.transform.localScale = scale2;
-                    ctn.transform.position = curNode.transform.position + (between2 / 2.0f);
-                    ctn.transform.LookAt(nextNode.transform.position);
-                    ctn.GetComponent<MeshRenderer>().enabled = false;
-                    ctn.GetComponent<BoxCollider>().isTrigger = true;
-                    ctn.AddComponent<PathwayColliion>();
-                    ctn.layer = 8;
+                    ctn = pathObjMaker(nextNode, curNode);
+
 
                 }
 
