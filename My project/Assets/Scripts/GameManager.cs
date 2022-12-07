@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        
         currentArrows = 0;
         maxArrows = 6;
         currentWeapon = sword;

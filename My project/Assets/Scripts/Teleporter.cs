@@ -34,12 +34,18 @@ public class Teleporter : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
+        teleport(other);
+    }
+
+    public void teleport(Collider other) 
+    {
         SoundController musicController = GameManager.Instance.soundController.GetComponent<SoundController>();
         AudioSource curMusic = musicController.currentMusic;
         string curMusicName = curMusic.name;
         if (other.CompareTag("Player"))
         {
-            if (curMusicName.Equals("CavernMusic") || curMusicName.Equals("WaterMusic")){
+            if (curMusicName.Equals("CavernMusic") || curMusicName.Equals("WaterMusic"))
+            {
                 StartCoroutine(musicController.FadeOutMusic(curMusic));
                 StartCoroutine(musicController.FadeInMusic(musicController.FieldsMusic));
 
@@ -74,7 +80,7 @@ public class Teleporter : MonoBehaviour
                 StartCoroutine(musicController.FadeInMusic(musicController.WaterMusic));
                 StartCoroutine(waiter());
             }
-            
+
             other.transform.position = pos;
         }
     }

@@ -12,6 +12,8 @@ public class HealthAndHunger : MonoBehaviour
     public Image healthImage;
     public Image hungerImage;
     public float timeToLoseHunger = 10;
+    public GameObject deathTeleporter;
+    
 
     private float healthMax;
     private float hungerMax;
@@ -78,7 +80,7 @@ public class HealthAndHunger : MonoBehaviour
         if (health <= 0)
         {
             health = 100;
-            gameObject.transform.position = new Vector3(471.412048f, 136.537003f, 515.718567f);
+            deathTeleporter.GetComponent<Teleporter>().teleport(gameObject.GetComponent<CapsuleCollider>());
 
         }
         healthImage.fillAmount = Mathf.Clamp(health / healthMax, 0, 1f);
